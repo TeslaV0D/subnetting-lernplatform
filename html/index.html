@@ -264,11 +264,82 @@
     .empty-state { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
     .empty-state i { font-size: 32px; display: block; margin-bottom: 0.5rem; }
 
+    /* IP-TRAINER */
+    .ip-display { font-family: var(--mono); font-size: 22px; font-weight: 700;
+      color: var(--blue-text); background: var(--blue-dim); border: 1px solid #1f4080;
+      padding: 0.75rem 1.25rem; border-radius: var(--radius); display: inline-block;
+      letter-spacing: 1px; }
+
+    .ip-input-row { display: flex; gap: 8px; align-items: center; }
+    .ip-field { padding: 9px 12px; border: 1px solid var(--border2); border-radius: var(--radius);
+      font-family: var(--mono); font-size: 15px; background: var(--bg); color: var(--text);
+      outline: none; transition: border-color .15s; flex: 1; }
+    .ip-field:focus { border-color: var(--blue); }
+    .ip-field.correct { border-color: var(--green); background: var(--green-dim); color: var(--green-text); }
+    .ip-field.wrong   { border-color: var(--red);   background: var(--red-dim);   color: var(--red-text); }
+
+    .mode-toggle { display: flex; gap: 4px; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 4px; width: fit-content; margin-bottom: 1.5rem; }
+    .mode-btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500;
+      cursor: pointer; border: none; background: transparent; color: var(--text2); transition: all .15s; }
+    .mode-btn.active { background: var(--bg2); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+
+    .binary-row { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 12px;
+      align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .binary-row:last-child { border-bottom: none; }
+    .binary-row .label { color: var(--text2); font-size: 12px; }
+    .binary-row .value { font-family: var(--mono); }
+    .binary-row .bin-net  { color: var(--blue-text); }
+    .binary-row .bin-host { color: var(--amber-text); }
+
+    .stat-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; font-size: 12px; }
+    .stat-pill { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px;
+      padding: 3px 10px; font-family: var(--mono); color: var(--text2); }
+    .stat-pill .ok { color: var(--green-text); }
+    .stat-pill .bad { color: var(--red-text); }
+
+    /* IP-Trainer layout helpers */
+    .ip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .ip-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .ip-question-grid { display: grid; gap: 0.875rem; }
+    .ip-q-row { display: grid; grid-template-columns: 170px 1fr; gap: 12px; align-items: center; }
+    .ip-q-row > .ip-q-label { font-size: 13px; color: var(--text2); }
+    .ip-result-inline { font-family: var(--mono); font-size: 13px; min-width: 34px; }
+    .ip-result-inline.ok  { color: var(--green-text); }
+    .ip-result-inline.bad { color: var(--red-text); }
+    .ip-btn-check { padding: 9px 12px; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); cursor: pointer; color: var(--text2); font-size: 14px; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; }
+    .ip-btn-check:hover { border-color: var(--blue); color: var(--blue-text); }
+    .badge-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .badge-btn { font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; cursor: pointer;
+      border: 1px solid var(--border2); background: var(--bg); color: var(--text2); transition: all .15s; font-family: var(--mono); }
+    .badge-btn:hover { border-color: var(--blue); color: var(--blue-text); }
+    .badge-btn.selected { background: var(--blue-dim); color: var(--blue-text); border-color: #1f4080; }
+    .badge-btn.correct { background: var(--green-dim); color: var(--green-text); border-color: var(--green); }
+    .badge-btn.wrong   { background: var(--red-dim);   color: var(--red-text);   border-color: var(--red); }
+    .ip-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 1.25rem; }
+    .ip-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 0.625rem 1.25rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
+    .ip-btn-primary:hover { background: #58a6ff; }
+    .ip-btn-ghost { display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1rem; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+    .ip-btn-ghost:hover { border-color: var(--blue); color: var(--blue-text); }
+    .ip-score { font-family: var(--mono); font-size: 14px; color: var(--text2); }
+    .ip-score strong { color: var(--green-text); }
+    .ip-stats-reset { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; text-decoration: underline; margin-top: 0.75rem; padding: 0; }
+    .ip-stats-reset:hover { color: var(--red-text); }
+    .ip-error-msg { color: var(--red-text); font-size: 13px; margin-top: 8px; display: none; }
+    .ip-error-msg.show { display: block; }
+    .ip-display-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .ip-slider-row { display: flex; align-items: center; gap: 12px; margin-top: 0.875rem; }
+    .ip-slider-row input[type=range] { flex: 1; accent-color: var(--blue); }
+    .ip-cidr-badge { font-family: var(--mono); font-size: 15px; color: var(--blue-text); background: var(--blue-dim); border: 1px solid #1f4080; padding: 4px 12px; border-radius: var(--radius); min-width: 52px; text-align: center; }
+
     @media (max-width: 600px) {
       .admin-stats { grid-template-columns: repeat(2, 1fr); }
       .test-meta { grid-template-columns: repeat(3, 1fr); }
       .nav-tab span { display: none; }
       .page { padding: 1rem; }
+      .ip-q-row { grid-template-columns: 1fr; gap: 4px; }
+      .binary-row { grid-template-columns: 110px 1fr; }
+      .binary-row .value.bin { grid-column: 1 / -1; overflow-x: auto; }
     }
   </style>
   <link rel="stylesheet" href="admin-editor.css">
@@ -308,6 +379,9 @@
     </button>
     <button class="nav-tab" onclick="showPage('test', this)">
       <i class="ti ti-clipboard-check"></i> <span>Test</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('ip-trainer', this)">
+      <i class="ti ti-network"></i> <span>IP-Trainer</span>
     </button>
     <button class="nav-tab" onclick="showPage('admin', this)">
       <i class="ti ti-settings"></i> <span>Admin</span>
@@ -445,6 +519,109 @@ Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="
   </div>
   <div id="q-area"></div>
   <div id="result-area" style="display:none;"></div>
+</div>
+
+<!-- ══════════════ IP-TRAINER PAGE ══════════════ -->
+<div id="page-ip-trainer" class="page">
+  <div class="learn-hero">
+    <h1><i class="ti ti-network"></i> IP-Trainer</h1>
+    <p>Übe das Berechnen von Subnetzmaske, Netz- und Broadcastadresse – oder nutze den Rechner für beliebige IP-Adressen.</p>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="ip-mode-practice" onclick="setIPMode('practice')">Üben</button>
+    <button class="mode-btn" id="ip-mode-calc" onclick="setIPMode('calc')">Rechner</button>
+  </div>
+
+  <!-- ─────── ÜBEN ─────── -->
+  <div id="ip-practice">
+    <div class="ip-display-row">
+      <span class="ip-display" id="ip-practice-display">–.–.–.– / –</span>
+      <button class="ip-btn-ghost" onclick="newIPChallenge()"><i class="ti ti-refresh"></i> Neu</button>
+    </div>
+
+    <div class="ip-card">
+      <div class="ip-question-grid">
+        <div class="ip-q-row">
+          <span class="ip-q-label">Subnetzmaske:</span>
+          <div class="ip-input-row">
+            <input class="ip-field" id="ip-in-SN" type="text" placeholder="z.B. 255.255.255.0" autocomplete="off" onkeydown="if(event.key==='Enter')checkIPField('SN')">
+            <button class="ip-btn-check" onclick="checkIPField('SN')"><i class="ti ti-check"></i></button>
+            <span class="ip-result-inline" id="ip-res-SN"></span>
+          </div>
+        </div>
+        <div class="ip-q-row">
+          <span class="ip-q-label">Netzadresse:</span>
+          <div class="ip-input-row">
+            <input class="ip-field" id="ip-in-NA" type="text" placeholder="z.B. 192.168.10.0" autocomplete="off" onkeydown="if(event.key==='Enter')checkIPField('NA')">
+            <button class="ip-btn-check" onclick="checkIPField('NA')"><i class="ti ti-check"></i></button>
+            <span class="ip-result-inline" id="ip-res-NA"></span>
+          </div>
+        </div>
+        <div class="ip-q-row">
+          <span class="ip-q-label">Broadcastadresse:</span>
+          <div class="ip-input-row">
+            <input class="ip-field" id="ip-in-BA" type="text" placeholder="z.B. 192.168.10.63" autocomplete="off" onkeydown="if(event.key==='Enter')checkIPField('BA')">
+            <button class="ip-btn-check" onclick="checkIPField('BA')"><i class="ti ti-check"></i></button>
+            <span class="ip-result-inline" id="ip-res-BA"></span>
+          </div>
+        </div>
+        <div class="ip-q-row">
+          <span class="ip-q-label">Netzklasse:</span>
+          <div>
+            <div class="badge-btns" id="ip-class-btns">
+              <button class="badge-btn" data-val="A" onclick="selectBadge('Klasse',this)">A</button>
+              <button class="badge-btn" data-val="B" onclick="selectBadge('Klasse',this)">B</button>
+              <button class="badge-btn" data-val="C" onclick="selectBadge('Klasse',this)">C</button>
+              <button class="badge-btn" data-val="D" onclick="selectBadge('Klasse',this)">D</button>
+              <button class="badge-btn" data-val="E" onclick="selectBadge('Klasse',this)">E</button>
+            </div>
+            <span class="ip-result-inline" id="ip-res-Klasse" style="margin-top:4px;display:inline-block"></span>
+          </div>
+        </div>
+        <div class="ip-q-row">
+          <span class="ip-q-label">Adressbereich:</span>
+          <div>
+            <div class="badge-btns" id="ip-priv-btns">
+              <button class="badge-btn" data-val="privat" onclick="selectBadge('privat',this)">privat</button>
+              <button class="badge-btn" data-val="öffentlich" onclick="selectBadge('privat',this)">öffentlich</button>
+            </div>
+            <span class="ip-result-inline" id="ip-res-privat" style="margin-top:4px;display:inline-block"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ip-actions">
+        <button class="ip-btn-primary" onclick="checkAllIPFields()"><i class="ti ti-checks"></i> Alle prüfen</button>
+        <button class="ip-btn-ghost" id="ip-next-btn" style="display:none" onclick="newIPChallenge()"><i class="ti ti-arrow-right"></i> Nächste IP</button>
+        <span class="ip-score" id="ip-score"></span>
+      </div>
+
+      <div class="stat-pills" id="ip-stat-pills"></div>
+      <button class="ip-stats-reset" onclick="resetIPStats()">Stats zurücksetzen</button>
+    </div>
+  </div>
+
+  <!-- ─────── RECHNER ─────── -->
+  <div id="ip-calc" style="display:none">
+    <div class="ip-card">
+      <div class="ip-q-row" style="margin-bottom:0.5rem">
+        <span class="ip-q-label">IP-Adresse:</span>
+        <input class="ip-field" id="ip-calc-input" type="text" placeholder="z.B. 192.168.1.1" autocomplete="off" oninput="calcIPLive()">
+      </div>
+      <div class="ip-slider-row">
+        <span class="ip-q-label" style="min-width:64px">Präfix:</span>
+        <input type="range" id="ip-calc-cidr" min="1" max="32" value="24" oninput="calcIPLive()">
+        <span class="ip-cidr-badge" id="ip-calc-cidr-badge">/24</span>
+      </div>
+      <div class="ip-error-msg" id="ip-calc-error"><i class="ti ti-alert-triangle"></i> Ungültige IP-Adresse. Bitte vier Zahlen von 0–255 eingeben (z.B. 192.168.1.1).</div>
+    </div>
+
+    <div class="ip-card" id="ip-calc-results" style="display:none">
+      <h3><i class="ti ti-list-details"></i> Berechnung</h3>
+      <div id="ip-calc-body"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════ ADMIN PAGE ══════════════ -->
@@ -826,6 +1003,7 @@ function showPage(p, tabEl) {
   document.getElementById('page-' + p).classList.add('active');
   if (tabEl) tabEl.classList.add('active');
   if (p === 'admin') renderAdmin();
+  if (p === 'ip-trainer' && !ipTrainerInitialized) { initIPTrainer(); ipTrainerInitialized = true; }
 }
 
 // ─── LEARN ───────────────────────────────
@@ -1129,6 +1307,328 @@ async function showResult() {
     document.getElementById('save-status').textContent = '⚠ Ergebnis konnte nicht gespeichert werden (Server nicht erreichbar)';
     document.getElementById('save-status').className = 'save-status err';
   }
+}
+
+// ═══════════════ IP-TRAINER ═══════════════
+let ipTrainerInitialized = false;
+let ipMode = 'practice';
+let ipChallenge = null;          // { ip, cidr, subnet, net, broadcast, klasse, privat }
+const IP_STAT_KEYS = ['SN', 'NA', 'BA', 'Klasse', 'privat'];
+
+// ── Berechnungslogik (rein clientseitig, keine Libraries) ──
+function cidrToSubnet(cidr) {
+  // Lookup-Tabelle der gültigen Oktettwerte (wie im Python-Skript)
+  const valid = [0, 128, 192, 224, 240, 248, 252, 254, 255];
+  const oct = [0, 0, 0, 0];
+  let bits = cidr;
+  for (let i = 0; i < 4; i++) {
+    if (bits >= 8)      { oct[i] = 255; bits -= 8; }
+    else if (bits <= 0) { oct[i] = 0; }
+    else                { oct[i] = valid[bits]; bits = 0; }
+  }
+  return oct.join('.');
+}
+
+function calcNetAddress(ip, subnet) {
+  // Bitweises UND von IP und Subnetzmaske
+  const a = ip.split('.').map(Number);
+  const m = subnet.split('.').map(Number);
+  return a.map((o, i) => o & m[i]).join('.');
+}
+
+function calcBroadcast(ip, subnet) {
+  // Bitweises ODER der Netzadresse mit der invertierten Maske
+  const a = ip.split('.').map(Number);
+  const m = subnet.split('.').map(Number);
+  return a.map((o, i) => (o & m[i]) | (255 - m[i])).join('.');
+}
+
+function calcClass(ip) {
+  // Erstes Oktett bestimmt die Klasse (A–E)
+  const f = parseInt(ip.split('.')[0], 10);
+  if (f < 128)  return 'A';   // 0xxxxxxx     (0–127)
+  if (f < 192)  return 'B';   // 10xxxxxx     (128–191)
+  if (f < 224)  return 'C';   // 110xxxxx     (192–223)
+  if (f < 240)  return 'D';   // 1110xxxx     (224–239)
+  return 'E';                 // 1111xxxx     (240–255)
+}
+
+function isPrivate(ip) {
+  // RFC 1918 – parseInt() für korrekten Zahlenvergleich (Bugfix ggü. Python-Skript)
+  const t = ip.split('.').map(s => parseInt(s, 10));
+  if (t[0] === 10) return true;                                  // 10.0.0.0/8
+  if (t[0] === 172 && t[1] > 15 && t[1] < 32) return true;       // 172.16.0.0/12
+  if (t[0] === 192 && t[1] === 168) return true;                 // 192.168.0.0/16
+  return false;
+}
+
+function ipToBinary(ip) {
+  return ip.split('.').map(o => parseInt(o, 10).toString(2).padStart(8, '0')).join('.');
+}
+
+function calcUsableHosts(cidr) {
+  if (cidr >= 31) return 0;     // /31 & /32: keine nutzbaren Hosts (klassisch)
+  return Math.pow(2, 32 - cidr) - 2;
+}
+
+function isValidIP(ip) {
+  const p = ip.trim().split('.');
+  if (p.length !== 4) return false;
+  return p.every(o => /^\d+$/.test(o) && +o >= 0 && +o <= 255);
+}
+
+function normIP(ip) {
+  // Eingaben tolerant normalisieren: führende Nullen / Leerzeichen entfernen
+  return ip.trim().split('.').map(o => String(parseInt(o, 10))).join('.');
+}
+
+// ── Modus umschalten ──
+function setIPMode(mode) {
+  ipMode = mode;
+  document.getElementById('ip-mode-practice').classList.toggle('active', mode === 'practice');
+  document.getElementById('ip-mode-calc').classList.toggle('active', mode === 'calc');
+  document.getElementById('ip-practice').style.display = mode === 'practice' ? 'block' : 'none';
+  document.getElementById('ip-calc').style.display     = mode === 'calc' ? 'block' : 'none';
+  if (mode === 'calc') calcIPLive();
+}
+
+// ── Initialisierung ──
+function initIPTrainer() {
+  newIPChallenge();
+  renderIPStats();
+  // Rechner mit sinnvollem Beispiel vorbelegen
+  document.getElementById('ip-calc-input').value = '192.168.1.100';
+}
+
+// ── ÜBEN: neue Aufgabe generieren ──
+function newIPChallenge() {
+  const ip = [0,1,2,3].map(() => Math.floor(Math.random() * 256)).join('.');
+  const cidr = 8 + Math.floor(Math.random() * 23);   // /8 bis /30
+  const subnet = cidrToSubnet(cidr);
+  ipChallenge = {
+    ip, cidr, subnet,
+    net: calcNetAddress(ip, subnet),
+    broadcast: calcBroadcast(ip, subnet),
+    klasse: calcClass(ip),
+    privat: isPrivate(ip) ? 'privat' : 'öffentlich'
+  };
+
+  document.getElementById('ip-practice-display').textContent = `${ip} / ${cidr}`;
+
+  // Eingabefelder zurücksetzen
+  ['SN', 'NA', 'BA'].forEach(k => {
+    const inp = document.getElementById('ip-in-' + k);
+    inp.value = ''; inp.readOnly = false;
+    inp.classList.remove('correct', 'wrong');
+    document.getElementById('ip-res-' + k).textContent = '';
+    document.getElementById('ip-res-' + k).className = 'ip-result-inline';
+  });
+  ['Klasse', 'privat'].forEach(k => {
+    document.querySelectorAll('#ip-' + (k === 'Klasse' ? 'class' : 'priv') + '-btns .badge-btn')
+      .forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+    document.getElementById('ip-res-' + k).textContent = '';
+    document.getElementById('ip-res-' + k).className = 'ip-result-inline';
+  });
+
+  document.getElementById('ip-score').textContent = '';
+  document.getElementById('ip-next-btn').style.display = 'none';
+  ipFieldChecked = {};
+}
+
+// ── Badge-Buttons (Klasse / privat) ──
+function selectBadge(cat, btn) {
+  if (ipFieldChecked[cat]) return;   // nach Prüfung gesperrt
+  const group = btn.parentElement;
+  group.querySelectorAll('.badge-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── Antwort-Vergleich pro Kategorie ──
+let ipFieldChecked = {};
+
+function evalIPField(cat) {
+  // Liefert { correct, given, expected } oder null wenn keine Eingabe
+  if (cat === 'SN' || cat === 'NA' || cat === 'BA') {
+    const inp = document.getElementById('ip-in-' + cat);
+    const raw = inp.value.trim();
+    if (!raw) return null;
+    const expected = cat === 'SN' ? ipChallenge.subnet : cat === 'NA' ? ipChallenge.net : ipChallenge.broadcast;
+    const correct = isValidIP(raw) && normIP(raw) === expected;
+    return { correct, given: raw, expected };
+  }
+  if (cat === 'Klasse' || cat === 'privat') {
+    const groupId = cat === 'Klasse' ? 'ip-class-btns' : 'ip-priv-btns';
+    const sel = document.querySelector('#' + groupId + ' .badge-btn.selected');
+    if (!sel) return null;
+    const given = sel.getAttribute('data-val');
+    const expected = cat === 'Klasse' ? ipChallenge.klasse : ipChallenge.privat;
+    // "A" und "Klasse A" beide akzeptieren
+    const givenNorm = given.replace(/^Klasse\s+/i, '').trim();
+    const correct = givenNorm.toLowerCase() === expected.toLowerCase();
+    return { correct, given, expected };
+  }
+  return null;
+}
+
+function applyIPFieldResult(cat, res, recordStat) {
+  if (cat === 'SN' || cat === 'NA' || cat === 'BA') {
+    const inp = document.getElementById('ip-in-' + cat);
+    const out = document.getElementById('ip-res-' + cat);
+    inp.readOnly = true;
+    inp.classList.remove('correct', 'wrong');
+    inp.classList.add(res.correct ? 'correct' : 'wrong');
+    out.className = 'ip-result-inline ' + (res.correct ? 'ok' : 'bad');
+    out.textContent = res.correct ? '✓' : '✗ ' + res.expected;
+  } else {
+    const groupId = cat === 'Klasse' ? 'ip-class-btns' : 'ip-priv-btns';
+    const sel = document.querySelector('#' + groupId + ' .badge-btn.selected');
+    if (sel) { sel.classList.remove('selected'); sel.classList.add(res.correct ? 'correct' : 'wrong'); }
+    if (!res.correct) {
+      document.querySelectorAll('#' + groupId + ' .badge-btn').forEach(b => {
+        const v = b.getAttribute('data-val').replace(/^Klasse\s+/i, '');
+        if (v.toLowerCase() === res.expected.toLowerCase()) b.classList.add('correct');
+      });
+    }
+    const out = document.getElementById('ip-res-' + cat);
+    out.className = 'ip-result-inline ' + (res.correct ? 'ok' : 'bad');
+    out.textContent = res.correct ? '✓ richtig' : '✗ richtig: ' + res.expected;
+  }
+  ipFieldChecked[cat] = true;
+  if (recordStat) recordIPStat(cat, res.correct);
+}
+
+// Inline-Check eines einzelnen Feldes
+function checkIPField(cat) {
+  if (ipFieldChecked[cat]) return;
+  const res = evalIPField(cat);
+  if (!res) return;   // leere Eingabe ignorieren
+  applyIPFieldResult(cat, res, true);
+  maybeShowNext();
+}
+
+// "Alle prüfen"
+function checkAllIPFields() {
+  let answered = 0, correct = 0;
+  IP_STAT_KEYS.forEach(cat => {
+    if (ipFieldChecked[cat]) {
+      answered++;
+      if (document.getElementById('ip-res-' + cat).classList.contains('ok')) correct++;
+      return;
+    }
+    const res = evalIPField(cat);
+    if (!res) return;   // unbeantwortete Felder überspringen
+    applyIPFieldResult(cat, res, true);
+    answered++;
+    if (res.correct) correct++;
+  });
+  document.getElementById('ip-score').innerHTML =
+    answered ? `Score: <strong>${correct}/${answered}</strong> ✓` : 'Bitte zuerst etwas eingeben.';
+  document.getElementById('ip-next-btn').style.display = 'inline-flex';
+}
+
+function maybeShowNext() {
+  // Sobald alle Kategorien geprüft sind, "Nächste IP" anbieten
+  if (IP_STAT_KEYS.every(c => ipFieldChecked[c])) {
+    const correct = IP_STAT_KEYS.filter(c => document.getElementById('ip-res-' + c).classList.contains('ok')).length;
+    document.getElementById('ip-score').innerHTML = `Score: <strong>${correct}/${IP_STAT_KEYS.length}</strong> ✓`;
+    document.getElementById('ip-next-btn').style.display = 'inline-flex';
+  }
+}
+
+// ── Session-Stats (localStorage) ──
+function getIPStats() {
+  const s = lsGet('ip_trainer_stats');
+  if (s && typeof s === 'object') return s;
+  const fresh = {}; IP_STAT_KEYS.forEach(k => fresh[k] = { c: 0, t: 0 });
+  return fresh;
+}
+
+function recordIPStat(cat, correct) {
+  const s = getIPStats();
+  if (!s[cat]) s[cat] = { c: 0, t: 0 };
+  s[cat].t++; if (correct) s[cat].c++;
+  lsSet('ip_trainer_stats', s);
+  renderIPStats();
+}
+
+function renderIPStats() {
+  const s = getIPStats();
+  const labels = { SN: 'Subnetz', NA: 'Netzadr.', BA: 'Broadcast', Klasse: 'Klasse', privat: 'privat' };
+  const pills = IP_STAT_KEYS.map(k => {
+    const d = s[k] || { c: 0, t: 0 };
+    const pct = d.t ? Math.round((d.c / d.t) * 100) : 0;
+    const cls = d.t === 0 ? '' : (pct >= 60 ? 'ok' : 'bad');
+    return `<span class="stat-pill">${labels[k]}: <span class="${cls}">${d.c}/${d.t}${d.t ? ` (${pct}%)` : ''}</span></span>`;
+  }).join('');
+  document.getElementById('ip-stat-pills').innerHTML = pills;
+}
+
+function resetIPStats() {
+  const fresh = {}; IP_STAT_KEYS.forEach(k => fresh[k] = { c: 0, t: 0 });
+  lsSet('ip_trainer_stats', fresh);
+  renderIPStats();
+}
+
+// ── RECHNER: Live-Berechnung ──
+function calcIPLive() {
+  const ipRaw = document.getElementById('ip-calc-input').value.trim();
+  const cidr  = parseInt(document.getElementById('ip-calc-cidr').value, 10);
+  document.getElementById('ip-calc-cidr-badge').textContent = '/' + cidr;
+  const errEl = document.getElementById('ip-calc-error');
+  const resWrap = document.getElementById('ip-calc-results');
+  const inp = document.getElementById('ip-calc-input');
+
+  if (!ipRaw) { errEl.classList.remove('show'); inp.classList.remove('wrong'); resWrap.style.display = 'none'; return; }
+  if (!isValidIP(ipRaw)) {
+    errEl.classList.add('show'); inp.classList.add('wrong'); resWrap.style.display = 'none'; return;
+  }
+  errEl.classList.remove('show'); inp.classList.remove('wrong');
+
+  const ip        = normIP(ipRaw);
+  const subnet    = cidrToSubnet(cidr);
+  const net       = calcNetAddress(ip, subnet);
+  const broadcast = calcBroadcast(ip, subnet);
+  const klasse    = calcClass(ip);
+  const priv      = isPrivate(ip);
+  const hosts     = calcUsableHosts(cidr);
+
+  // Host-Range: erste/letzte nutzbare Adresse
+  let rangeStr;
+  if (hosts <= 0) {
+    rangeStr = '– (kein nutzbarer Hostbereich)';
+  } else {
+    const firstP = net.split('.').map(Number); firstP[3] += 1;
+    const lastP  = broadcast.split('.').map(Number); lastP[3] -= 1;
+    rangeStr = `${firstP.join('.')} – ${lastP.join('.')}`;
+  }
+
+  resWrap.style.display = 'block';
+  document.getElementById('ip-calc-body').innerHTML = `
+    ${binaryRow('IP-Adresse', ip, cidr)}
+    ${binaryRow('Subnetzmaske', subnet, cidr)}
+    ${binaryRow('Netzadresse', net, cidr)}
+    ${binaryRow('Broadcast', broadcast, cidr)}
+    <div class="binary-row"><span class="label">Host-Range</span><span class="value" style="grid-column:2 / -1">${rangeStr}</span></div>
+    <div class="binary-row"><span class="label">Nutzbare Hosts</span><span class="value" style="grid-column:2 / -1">${hosts.toLocaleString('de-DE')}</span></div>
+    <div class="binary-row"><span class="label">Netzklasse</span><span class="value" style="grid-column:2 / -1">${klasse}</span></div>
+    <div class="binary-row"><span class="label">Adressbereich</span><span class="value" style="grid-column:2 / -1">${priv ? '🔒 Privat (RFC 1918)' : '🌐 Öffentlich'}</span></div>`;
+}
+
+// Eine Zeile mit Dezimal- und farbig hervorgehobener Binärdarstellung
+function binaryRow(label, ip, cidr) {
+  const bin = ipToBinary(ip);            // "11000000.10101000..."
+  let html = '', bitCount = 0;
+  for (const ch of bin) {
+    if (ch === '.') { html += '.'; continue; }
+    const cls = bitCount < cidr ? 'bin-net' : 'bin-host';
+    html += `<span class="${cls}">${ch}</span>`;
+    bitCount++;
+  }
+  return `<div class="binary-row">
+    <span class="label">${label}</span>
+    <span class="value">${ip}</span>
+    <span class="value bin">${html}</span>
+  </div>`;
 }
 
 // ─── ADMIN-BEREICH ───────────────────────
