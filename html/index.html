@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subnetting Lernplattform – FI-Azubi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0d1117;
+      --bg2:         #161b22;
+      --bg3:         #21262d;
+      --border:      #30363d;
+      --border2:     #444c56;
+      --text:        #e6edf3;
+      --text2:       #8b949e;
+      --text3:       #6e7681;
+      --blue:        #388bfd;
+      --blue-dim:    #1c2d4a;
+      --blue-text:   #79c0ff;
+      --green:       #3fb950;
+      --green-dim:   #1a2e1a;
+      --green-text:  #7ee787;
+      --red:         #f85149;
+      --red-dim:     #2c1517;
+      --red-text:    #ffa198;
+      --amber:       #d29922;
+      --amber-dim:   #2d2007;
+      --amber-text:  #e3b341;
+      --mono:        'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --sans:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --radius:      8px;
+      --radius-lg:   12px;
+    }
+
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+    /* NAV */
+    .nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; height: 56px; position: sticky; top: 0; z-index: 100; gap: 1rem; }
+    .nav-brand { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+    .nav-brand span { color: var(--blue-text); }
+    .nav-user { font-size: 13px; color: var(--text2); margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .nav-user strong { color: var(--blue-text); }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab { padding: 6px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; color: var(--text2); background: transparent; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-tab:hover { background: var(--bg3); color: var(--text); }
+    .nav-tab.active { background: var(--blue-dim); color: var(--blue-text); border-color: #1f4080; }
+
+    /* LOGIN SCREEN */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .login-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; width: 100%; max-width: 420px; text-align: center; }
+    .login-box .logo { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--blue-text); margin-bottom: 0.25rem; }
+    .login-box .tagline { font-size: 13px; color: var(--text3); margin-bottom: 2rem; }
+    .login-box h2 { font-size: 18px; margin-bottom: 1.5rem; }
+    .input-group { margin-bottom: 1rem; text-align: left; }
+    .input-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 5px; }
+    .input-group input { width: 100%; padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border2); font-size: 15px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .input-group input:focus { border-color: var(--blue); }
+    .btn-start { width: 100%; padding: 0.75rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; transition: background 0.15s; }
+    .btn-start:hover { background: #58a6ff; }
+    .login-hint { font-size: 12px; color: var(--text3); margin-top: 1rem; }
+
+    /* PAGES */
+    #app { display: none; }
+    .page { display: none; padding: 2rem 1.5rem; max-width: 880px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    /* LEARN PAGE */
+    .learn-hero { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .learn-hero h1 { font-size: 22px; font-weight: 600; margin-bottom: 0.4rem; }
+    .learn-hero p { font-size: 14px; color: var(--text2); }
+    .progress-row { display: flex; align-items: center; gap: 10px; margin-top: 1rem; }
+    .progress-label { font-size: 12px; color: var(--text3); font-family: var(--mono); min-width: 60px; }
+    .progress-bar-wrap { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.4s ease; }
+
+    .chapter { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 0.75rem; overflow: hidden; }
+    .chapter-header { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; user-select: none; transition: background 0.15s; }
+    .chapter-header:hover { background: var(--bg3); }
+    .ch-badge { font-family: var(--mono); font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border); min-width: 32px; text-align: center; }
+    .ch-read .ch-badge { background: var(--blue-dim); color: var(--blue-text); border-color: #1f4080; }
+    .ch-title { font-size: 15px; font-weight: 500; flex: 1; }
+    .ch-icon { color: var(--text3); font-size: 16px; transition: transform 0.2s; }
+    .chapter.open .ch-icon { transform: rotate(180deg); }
+    .chapter-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); }
+    .chapter.open .chapter-body { display: block; }
+    .chapter-body p { font-size: 14px; color: var(--text2); margin-top: 0.875rem; line-height: 1.75; }
+    .chapter-body strong { color: var(--text); font-weight: 600; }
+    .code-block { font-family: var(--mono); font-size: 12.5px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.125rem; margin-top: 0.875rem; line-height: 1.9; overflow-x: auto; white-space: pre; }
+    .hl  { color: var(--blue-text); }
+    .ok  { color: var(--green-text); }
+    .warn{ color: var(--amber-text); }
+    .err { color: var(--red-text); }
+    .tip-box { background: var(--blue-dim); border: 1px solid #1f4080; border-radius: var(--radius); padding: 0.75rem 1rem; margin-top: 0.875rem; }
+    .tip-label { font-size: 11px; font-weight: 600; color: var(--blue-text); margin-bottom: 4px; }
+    .tip-box p { color: var(--blue-text); margin-top: 0 !important; }
+    .start-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 0.875rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 1.5rem; transition: background 0.15s; }
+    .start-btn:hover { background: #58a6ff; }
+
+    /* TEST PAGE */
+    .test-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+    .t-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.875rem; text-align: center; }
+    .t-stat .lbl { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+    .t-stat .val { font-family: var(--mono); font-size: 22px; font-weight: 600; }
+
+    .q-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .q-prog-wrap { height: 4px; background: var(--bg3); border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden; }
+    .q-prog-bar { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.4s; }
+    .q-num { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 0.5rem; }
+    .q-type-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 0.75rem; }
+    .q-type-badge.mc  { background: var(--blue-dim); color: var(--blue-text); border: 1px solid #1f4080; }
+    .q-type-badge.ft  { background: var(--amber-dim); color: var(--amber-text); border: 1px solid #5a3e00; }
+    .q-type-badge.ord { background: #1e1e3a; color: #a5a5ff; border: 1px solid #3a3a7a; }
+    .q-text { font-size: 15px; line-height: 1.65; margin-bottom: 0.75rem; }
+    .q-ip { font-family: var(--mono); font-size: 19px; font-weight: 600; color: var(--blue-text); background: var(--blue-dim); border: 1px solid #1f4080; padding: 0.5rem 1rem; border-radius: var(--radius); display: inline-block; margin-bottom: 1.25rem; letter-spacing: 0.5px; }
+
+    /* Multiple choice */
+    .q-opts { display: grid; gap: 8px; }
+    .q-opt { padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 14px; font-family: var(--mono); background: var(--bg); color: var(--text); text-align: left; transition: all 0.12s; }
+    .q-opt:hover:not(.disabled) { border-color: var(--blue); background: var(--blue-dim); color: var(--blue-text); }
+    .q-opt.correct { background: var(--green-dim); border-color: var(--green); color: var(--green-text); }
+    .q-opt.wrong   { background: var(--red-dim);   border-color: var(--red);   color: var(--red-text); }
+    .q-opt.disabled { pointer-events: none; }
+
+    /* Free text */
+    .q-freetext-wrap { display: flex; gap: 8px; align-items: flex-start; }
+    .q-freetext { width: 100%; padding: 10px 14px; border: 1px solid var(--border2); border-radius: var(--radius); font-size: 15px; font-family: var(--mono); background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .q-freetext:focus { border-color: var(--blue); }
+    .q-freetext.correct { border-color: var(--green); background: var(--green-dim); color: var(--green-text); }
+    .q-freetext.wrong   { border-color: var(--red);   background: var(--red-dim);   color: var(--red-text); }
+    .btn-check { padding: 10px 18px; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+    .btn-check:hover { background: #58a6ff; }
+    .btn-check:disabled { background: var(--bg3); color: var(--text3); cursor: default; }
+
+    /* Order drag */
+    .q-order-list { display: flex; flex-direction: column; gap: 6px; }
+    .order-item { padding: 10px 14px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); font-family: var(--mono); font-size: 14px; cursor: grab; display: flex; align-items: center; gap: 10px; user-select: none; transition: all 0.15s; }
+    .order-item:active { cursor: grabbing; opacity: 0.8; }
+    .order-item.dragging { opacity: 0.4; border-style: dashed; }
+    .order-item.over { border-color: var(--blue); background: var(--blue-dim); }
+    .order-item .drag-handle { color: var(--text3); font-size: 16px; }
+    .order-item.correct-pos { border-color: var(--green); background: var(--green-dim); color: var(--green-text); }
+    .order-item.wrong-pos   { border-color: var(--red);   background: var(--red-dim);   color: var(--red-text); }
+    .btn-check-order { margin-top: 10px; padding: 10px 20px; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .btn-check-order:hover { background: #58a6ff; }
+
+    .q-feedback { margin-top: 0.875rem; padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 14px; display: none; }
+    .q-feedback.show { display: block; }
+    .q-feedback.ok  { background: var(--green-dim); border: 1px solid var(--green); color: var(--green-text); }
+    .q-feedback.bad { background: var(--red-dim);   border: 1px solid var(--red);   color: var(--red-text); }
+    .q-next { margin-top: 1rem; padding: 0.625rem 1.25rem; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); cursor: pointer; font-size: 14px; color: var(--text); display: none; align-items: center; gap: 6px; }
+    .q-next.show { display: inline-flex; }
+    .q-next:hover { background: var(--bg); border-color: var(--blue); color: var(--blue-text); }
+
+    /* Result */
+    .result-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; text-align: center; }
+    .result-pct { font-family: var(--mono); font-size: 56px; font-weight: 700; margin: 0.25rem 0; }
+    .result-pct.pass { color: var(--green-text); }
+    .result-pct.fail { color: var(--red-text); }
+    .result-badge { font-size: 13px; font-weight: 600; padding: 4px 16px; border-radius: 20px; display: inline-block; margin-bottom: 0.75rem; }
+    .result-badge.pass { background: var(--green-dim); color: var(--green-text); border: 1px solid var(--green); }
+    .result-badge.fail { background: var(--red-dim);   color: var(--red-text);   border: 1px solid var(--red); }
+    .result-sub { font-size: 14px; color: var(--text2); }
+    .result-errors { text-align: left; margin-top: 1.5rem; }
+    .result-errors h3 { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 0.75rem; }
+    .err-item { border-left: 3px solid var(--red); padding: 0.625rem 0.875rem; margin-bottom: 0.625rem; background: var(--red-dim); border-radius: 0 var(--radius) var(--radius) 0; font-size: 13px; }
+    .err-q  { color: var(--red-text); font-weight: 600; margin-bottom: 4px; }
+    .err-ans{ font-family: var(--mono); color: var(--text2); }
+    .err-ok { font-family: var(--mono); color: var(--green-text); }
+    .result-btns { display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .result-btns button { padding: 0.625rem 1.25rem; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border2); background: var(--bg3); color: var(--text); display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .result-btns button:hover { border-color: var(--blue); color: var(--blue-text); }
+    .result-btns .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .result-btns .btn-primary:hover { background: #58a6ff; color: #fff; }
+    .save-status { font-size: 12px; color: var(--text3); margin-top: 0.75rem; }
+    .save-status.ok  { color: var(--green-text); }
+    .save-status.err { color: var(--red-text); }
+
+    /* ADMIN PAGE */
+    .admin-login { max-width: 380px; margin: 4rem auto; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+    .admin-login .lock-icon { font-size: 28px; color: var(--blue-text); margin-bottom: 1rem; display: block; }
+    .admin-login h2 { font-size: 18px; font-weight: 600; margin-bottom: 1.25rem; }
+    .form-group { margin-bottom: 0.875rem; }
+    .form-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 5px; }
+    .form-group input { width: 100%; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--border2); font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .form-group input:focus { border-color: var(--blue); }
+    .btn-login { width: 100%; padding: 0.625rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 0.25rem; transition: background 0.15s; }
+    .btn-login:hover { background: #58a6ff; }
+    .login-err { color: var(--red-text); font-size: 13px; margin-top: 0.625rem; }
+
+    .admin-panel { display: none; }
+    .admin-panel.visible { display: block; }
+    .admin-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+    .admin-topbar h2 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .admin-topbar-right { display: flex; gap: 8px; }
+    .btn-logout { font-size: 13px; color: var(--text2); background: transparent; border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .btn-logout:hover { border-color: var(--red); color: var(--red-text); }
+    .btn-export { font-size: 13px; color: var(--blue-text); background: transparent; border: 1px solid #1f4080; border-radius: var(--radius); padding: 5px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .btn-export:hover { background: var(--blue-dim); }
+
+    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .a-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; }
+    .a-stat .lbl { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+    .a-stat .val { font-family: var(--mono); font-size: 24px; font-weight: 700; }
+    .val-good { color: var(--green-text); }
+    .val-bad  { color: var(--red-text); }
+    .val-blue { color: var(--blue-text); }
+
+    .admin-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.25rem; overflow: hidden; }
+    .admin-sec-head { padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .admin-sec-head h3 { font-size: 14px; font-weight: 600; }
+    .btn-danger { font-size: 12px; color: var(--red-text); background: none; border: 1px solid #3d1a1a; border-radius: var(--radius); padding: 4px 12px; cursor: pointer; transition: all 0.15s; }
+    .btn-danger:hover { background: var(--red-dim); }
+    .btn-add { font-size: 12px; color: var(--blue-text); background: none; border: 1px solid #1f4080; border-radius: var(--radius); padding: 4px 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
+    .btn-add:hover { background: var(--blue-dim); }
+
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .admin-table th { padding: 0.5rem 1.25rem; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); background: var(--bg3); border-bottom: 1px solid var(--border); letter-spacing: 0.5px; }
+    .admin-table td { padding: 0.625rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table .mono { font-family: var(--mono); }
+    .admin-table .name-cell { font-weight: 600; color: var(--text); }
+    .admin-table .detail-btn { font-size: 11px; color: var(--blue-text); background: none; border: 1px solid #1f4080; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+    .admin-table .detail-btn:hover { background: var(--blue-dim); }
+
+    .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; display: inline-block; }
+    .badge.pass { background: var(--green-dim); color: var(--green-text); border: 1px solid var(--green); }
+    .badge.fail { background: var(--red-dim);   color: var(--red-text);   border: 1px solid var(--red); }
+
+    .q-admin-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .q-admin-item:last-child { border-bottom: none; }
+    .q-admin-text { flex: 1; color: var(--text2); }
+    .q-admin-text .q-ip-badge { font-family: var(--mono); font-size: 11px; color: var(--blue-text); background: var(--blue-dim); padding: 1px 7px; border-radius: 4px; margin-left: 6px; }
+    .err-count { font-family: var(--mono); font-size: 12px; color: var(--red-text); background: var(--red-dim); padding: 2px 8px; border-radius: 20px; min-width: 30px; text-align: center; border: 1px solid #3d1a1a; }
+    .btn-icon { font-size: 12px; background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 10px; cursor: pointer; color: var(--text2); display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
+    .btn-icon:hover { border-color: var(--blue); color: var(--blue-text); }
+    .btn-icon.del:hover { border-color: var(--red); color: var(--red-text); }
+
+    /* Detail drawer */
+    .detail-drawer { background: var(--bg3); border-top: 1px solid var(--border); padding: 1rem 1.25rem; font-size: 12px; display: none; }
+    .detail-drawer.open { display: block; }
+    .detail-drawer .wrong-list { margin-top: 0.5rem; }
+    .detail-drawer .dw-item { padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+    .detail-drawer .dw-item:last-child { border-bottom: none; }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 500; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 1.5rem; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+    .modal .form-group input, .modal .form-group textarea, .modal .form-group select { font-family: var(--mono); font-size: 13px; }
+    .modal .form-group textarea { min-height: 80px; resize: vertical; }
+    .modal .form-group select { width: 100%; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--border2); font-size: 14px; background: var(--bg); color: var(--text); outline: none; }
+    .modal-btns { display: flex; gap: 8px; margin-top: 1.25rem; justify-content: flex-end; }
+    .modal-btns button { padding: 0.5rem 1.25rem; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border2); background: var(--bg3); color: var(--text); transition: all 0.15s; }
+    .modal-btns button:hover { background: var(--bg); }
+    .modal-btns .btn-save { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .modal-btns .btn-save:hover { background: #58a6ff; }
+    .modal-note { font-size: 12px; color: var(--text3); margin-top: 0.5rem; }
+
+    /* EMPTY STATES */
+    .empty-state { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
+    .empty-state i { font-size: 32px; display: block; margin-bottom: 0.5rem; }
+
+    @media (max-width: 600px) {
+      .admin-stats { grid-template-columns: repeat(2, 1fr); }
+      .test-meta { grid-template-columns: repeat(3, 1fr); }
+      .nav-tab span { display: none; }
+      .page { padding: 1rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="admin-editor.css">
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="logo">192.168.LERN.PLATZ</div>
+    <div class="tagline">Subnetting Lernplattform für FI-Azubis</div>
+    <h2>Willkommen! Bitte einloggen</h2>
+    <div class="input-group">
+      <label>Dein vollständiger Name</label>
+      <input type="text" id="login-name" placeholder="z. B. Max Mustermann" autocomplete="name" />
+    </div>
+    <button class="btn-start" onclick="doLogin()">
+      <i class="ti ti-login"></i> Loslegen
+    </button>
+    <p class="login-hint">Dein Name wird beim Admin angezeigt, damit deine Ergebnisse zugeordnet werden können.</p>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <span class="nav-brand"><span>192.168</span>.LERN.PLATZ</span>
+  <div class="nav-user">
+    <i class="ti ti-user-circle"></i>
+    <span>Angemeldet als <strong id="nav-username"></strong></span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('learn', this)">
+      <i class="ti ti-book"></i> <span>Lernen</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('test', this)">
+      <i class="ti ti-clipboard-check"></i> <span>Test</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('admin', this)">
+      <i class="ti ti-settings"></i> <span>Admin</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════ LEARN PAGE ══════════════ -->
+<div id="page-learn" class="page active">
+  <div class="learn-hero">
+    <h1>Subnetting – von Grund auf verstehen</h1>
+    <p>Lies alle Kapitel sorgfältig durch. Danach kannst du den Test starten und dein Wissen unter Beweis stellen.</p>
+    <div class="progress-row">
+      <span class="progress-label" id="progress-label">0 / 5</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+      <span style="font-size:12px;color:var(--text3)" id="progress-pct">0%</span>
+    </div>
+  </div>
+
+  <div class="chapter" id="ch0">
+    <div class="chapter-header" onclick="toggleChapter(0)">
+      <span class="ch-badge">01</span>
+      <span class="ch-title">Was ist eine IP-Adresse?</span>
+      <i class="ti ti-chevron-down ch-icon"></i>
+    </div>
+    <div class="chapter-body">
+      <p>Eine <strong>IPv4-Adresse</strong> besteht aus <strong>32 Bits</strong>, die in vier Gruppen (Oktette) zu je 8 Bit aufgeteilt werden. Jede Gruppe wird als Dezimalzahl (0–255) geschrieben und durch einen Punkt getrennt.</p>
+      <div class="code-block"><span class="hl">192</span>  .  <span class="hl">168</span>  .  <span class="hl">10</span>  .  <span class="hl">1</span>
+11000000 . 10101000 . 00001010 . 00000001
+↑ 8 Bit  ↑  8 Bit  ↑  8 Bit  ↑  8 Bit
+       = insgesamt 32 Bit</div>
+      <p>Eine IP-Adresse hat immer zwei logische Teile: den <strong>Netzanteil</strong> (Network ID) und den <strong>Hostanteil</strong> (Host ID). Wo die Grenze liegt, bestimmt die <strong>Subnetzmaske</strong>.</p>
+      <div class="tip-box"><div class="tip-label"><i class="ti ti-bulb"></i> Merksatz</div><p>32 Bits → 4 Oktette → Dezimalwerte 0–255, getrennt durch Punkte. Jede Adresse hat einen Netz- und einen Hostteil.</p></div>
+    </div>
+  </div>
+
+  <div class="chapter" id="ch1">
+    <div class="chapter-header" onclick="toggleChapter(1)">
+      <span class="ch-badge">02</span>
+      <span class="ch-title">Subnetzmaske &amp; CIDR-Notation</span>
+      <i class="ti ti-chevron-down ch-icon"></i>
+    </div>
+    <div class="chapter-body">
+      <p>Die <strong>Subnetzmaske</strong> ist ebenfalls 32 Bit lang und besteht immer aus aufeinanderfolgenden Einsen (Netzanteil), gefolgt von Nullen (Hostanteil).</p>
+      <div class="code-block">Subnetzmaske: <span class="hl">255.255.255.0</span>
+Binär:        <span class="hl">11111111.11111111.11111111</span>.<span class="warn">00000000</span>
+              |———— Netzanteil (24 Bit) ————|<span class="warn"> Host </span>|</div>
+      <p>Die <strong>CIDR-Notation</strong> schreibt die Anzahl der Netz-Bits nach einem Schrägstrich.</p>
+      <div class="code-block">192.168.10.0<span class="ok">/24</span>  ↔  Maske 255.255.255.0   (24 Einsen)
+192.168.10.0<span class="ok">/25</span>  ↔  Maske 255.255.255.128 (25 Einsen)
+192.168.10.0<span class="ok">/26</span>  ↔  Maske 255.255.255.192 (26 Einsen)
+10.0.0.0<span class="ok">/8</span>      ↔  Maske 255.0.0.0       ( 8 Einsen)</div>
+      <div class="tip-box"><div class="tip-label"><i class="ti ti-bulb"></i> Eselsbrücke</div><p>Die Zahl nach dem "/" = Anzahl der Einsen in der binären Maske. /24 → 24 Einsen → 255.255.255.0</p></div>
+    </div>
+  </div>
+
+  <div class="chapter" id="ch2">
+    <div class="chapter-header" onclick="toggleChapter(2)">
+      <span class="ch-badge">03</span>
+      <span class="ch-title">Netzadresse, Broadcast &amp; nutzbare Hosts</span>
+      <i class="ti ti-chevron-down ch-icon"></i>
+    </div>
+    <div class="chapter-body">
+      <p>In jedem Subnetz sind die <strong>erste</strong> und die <strong>letzte</strong> Adresse reserviert:</p>
+      <div class="code-block">Beispielnetz: 192.168.1.0/24
+
+<span class="ok">Netzadresse</span>:       192.168.1.<span class="hl">0</span>    ← Hostanteil = alles 0
+<span class="warn">Broadcast</span>:         192.168.1.<span class="hl">255</span>  ← Hostanteil = alles 1
+<span class="ok">Nutzbare Hosts</span>:    192.168.1.<span class="hl">1</span>  –  192.168.1.<span class="hl">254</span>
+Anzahl Hosts:     2⁸ – 2 = <span class="hl">254</span></div>
+      <p>Formel für nutzbare Hosts: <strong>2^(32 – Präfix) – 2</strong></p>
+      <div class="code-block">/24 → 2^8  – 2 = <span class="ok">254 Hosts</span>
+/25 → 2^7  – 2 = <span class="ok">126 Hosts</span>
+/26 → 2^6  – 2 = <span class="ok"> 62 Hosts</span>
+/27 → 2^5  – 2 = <span class="ok"> 30 Hosts</span>
+/30 → 2^2  – 2 = <span class="ok">  2 Hosts</span>  ← Punkt-zu-Punkt</div>
+    </div>
+  </div>
+
+  <div class="chapter" id="ch3">
+    <div class="chapter-header" onclick="toggleChapter(3)">
+      <span class="ch-badge">04</span>
+      <span class="ch-title">Subnetting berechnen – Schritt für Schritt</span>
+      <i class="ti ti-chevron-down ch-icon"></i>
+    </div>
+    <div class="chapter-body">
+      <p>Aufgabe: Netzwerk <strong>192.168.10.0/26</strong> vollständig analysieren.</p>
+      <div class="code-block"><span class="ok">Schritt 1</span> – Host-Bits:   32 – 26 = <span class="hl">6 Host-Bits</span>
+<span class="ok">Schritt 2</span> – Blockgröße: 2^6 = <span class="hl">64</span>
+<span class="ok">Schritt 3</span> – Hosts:       64 – 2 = <span class="hl">62 nutzbare Hosts</span>
+<span class="ok">Schritt 4</span> – Maske:       256 – 64 = 192 → <span class="hl">255.255.255.192</span>
+
+Netzadresse:   192.168.10.<span class="ok">0</span>
+Broadcast:     192.168.10.<span class="warn">63</span>   (0 + 64 – 1)
+Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="hl">62</span></div>
+      <div class="tip-box"><div class="tip-label"><i class="ti ti-bulb"></i> Trick für das letzte Oktett der Maske</div><p>Letztes Oktett = 256 – Blockgröße. Blockgröße 64 → 256 – 64 = 192 → Maske endet auf .192</p></div>
+    </div>
+  </div>
+
+  <div class="chapter" id="ch4">
+    <div class="chapter-header" onclick="toggleChapter(4)">
+      <span class="ch-badge">05</span>
+      <span class="ch-title">Private Adressbereiche &amp; Schnell-Referenz</span>
+      <i class="ti ti-chevron-down ch-icon"></i>
+    </div>
+    <div class="chapter-body">
+      <p>Laut <strong>RFC 1918</strong> sind folgende Bereiche für private Netzwerke reserviert:</p>
+      <div class="code-block"><span class="ok">Klasse A</span>: 10.0.0.0     –  10.255.255.255   (/8)
+<span class="ok">Klasse B</span>: 172.16.0.0  – 172.31.255.255   (/12)
+<span class="ok">Klasse C</span>: 192.168.0.0 – 192.168.255.255  (/16)</div>
+      <div class="code-block">Präfix │ Maske               │ Hosts  │ Blockgr.
+───────┼─────────────────────┼────────┼─────────
+<span class="hl">/24</span>    │ 255.255.255.<span class="ok">0</span>       │ <span class="hl">254</span>    │ 256
+<span class="hl">/25</span>    │ 255.255.255.<span class="ok">128</span>     │ <span class="hl">126</span>    │ 128
+<span class="hl">/26</span>    │ 255.255.255.<span class="ok">192</span>     │ <span class="hl"> 62</span>    │  64
+<span class="hl">/27</span>    │ 255.255.255.<span class="ok">224</span>     │ <span class="hl"> 30</span>    │  32
+<span class="hl">/28</span>    │ 255.255.255.<span class="ok">240</span>     │ <span class="hl"> 14</span>    │  16
+<span class="hl">/29</span>    │ 255.255.255.<span class="ok">248</span>     │ <span class="hl">  6</span>    │   8
+<span class="hl">/30</span>    │ 255.255.255.<span class="ok">252</span>     │ <span class="hl">  2</span>    │   4</div>
+      <div class="tip-box"><div class="tip-label"><i class="ti ti-bulb"></i> Prüfungstipp</div><p>Lerne die Blockgrößen: 256, 128, 64, 32, 16, 8, 4 (immer die Hälfte des vorherigen). Die Subnetzmaske ergibt sich aus 256 – Blockgröße.</p></div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startTest()">
+    <i class="ti ti-clipboard-check"></i> Test starten
+  </button>
+</div>
+
+<!-- ══════════════ TEST PAGE ══════════════ -->
+<div id="page-test" class="page">
+  <div class="test-meta">
+    <div class="t-stat"><div class="lbl">Frage</div><div class="val" id="q-counter">– / –</div></div>
+    <div class="t-stat"><div class="lbl">Richtig</div><div class="val" style="color:var(--green-text)" id="q-correct">0</div></div>
+    <div class="t-stat"><div class="lbl">Falsch</div><div class="val" style="color:var(--red-text)" id="q-wrong">0</div></div>
+  </div>
+  <div id="q-area"></div>
+  <div id="result-area" style="display:none;"></div>
+</div>
+
+<!-- ══════════════ ADMIN PAGE ══════════════ -->
+<div id="page-admin" class="page">
+  <div id="admin-login-wrap">
+    <div class="admin-login">
+      <i class="ti ti-lock lock-icon"></i>
+      <h2>Admin-Bereich</h2>
+      <div class="form-group">
+        <label>Passwort</label>
+        <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" />
+      </div>
+      <button class="btn-login" onclick="adminLogin()">Einloggen</button>
+      <div class="login-err" id="login-err"></div>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="admin-panel">
+    <div class="admin-topbar">
+      <div class="admin-switch">
+        <button data-view="results" class="active" onclick="switchAdminView('results')"><i class="ti ti-chart-bar"></i> Ergebnisse</button>
+        <button data-view="questions" onclick="switchAdminView('questions')"><i class="ti ti-list-details"></i> Fragen verwalten</button>
+      </div>
+      <div class="admin-topbar-right">
+        <button class="btn-logout" onclick="adminLogout()"><i class="ti ti-logout"></i> Abmelden</button>
+      </div>
+    </div>
+
+    <!-- ─────────── VIEW: ERGEBNISSE ─────────── -->
+    <div id="view-results" class="admin-view active">
+      <div class="admin-stats" id="admin-stats-row"></div>
+
+      <!-- Results table -->
+      <div class="admin-section">
+        <div class="admin-sec-head">
+          <h3><i class="ti ti-list"></i> Alle Testergebnisse</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn-export" onclick="exportResults()"><i class="ti ti-download"></i> JSON Export</button>
+            <button class="btn-danger" onclick="clearResults()"><i class="ti ti-trash"></i> Alle löschen</button>
+          </div>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>NAME</th>
+              <th>DATUM / UHRZEIT</th>
+              <th>PUNKTE</th>
+              <th>RICHTIG</th>
+              <th>STATUS</th>
+              <th>DAUER</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Error heatmap -->
+      <div class="admin-section">
+        <div class="admin-sec-head"><h3><i class="ti ti-flame"></i> Fehlerhäufigkeit nach Frage</h3></div>
+        <div id="error-heatmap"></div>
+      </div>
+    </div>
+
+    <!-- ─────────── VIEW: FRAGEN VERWALTEN ─────────── -->
+    <div id="view-questions" class="admin-view">
+      <div class="qm-toolbar">
+        <div class="qm-title"><i class="ti ti-database-cog"></i> Fragen verwalten</div>
+        <div class="qm-toolbar-actions">
+          <button class="qm-btn primary" onclick="newQuestion()"><i class="ti ti-plus"></i> <span>Neue Frage</span></button>
+          <button class="qm-btn" onclick="exportQuestions()"><i class="ti ti-download"></i> <span>Export</span></button>
+          <button class="qm-btn" onclick="openImport()"><i class="ti ti-upload"></i> <span>Import</span></button>
+          <button class="qm-btn" onclick="openCategories()"><i class="ti ti-tags"></i> <span>Kategorien</span></button>
+        </div>
+      </div>
+
+      <div class="qm-grid">
+        <!-- Linke Spalte: Liste -->
+        <div class="qm-list-panel">
+          <div class="qm-filters">
+            <div class="qm-filter-row">
+              <select id="qm-filter-type">
+                <option value="">Alle Typen</option>
+                <option value="mc">Multiple Choice</option>
+                <option value="freetext">Freitext</option>
+                <option value="order">Reihenfolge</option>
+              </select>
+              <select id="qm-filter-cat">
+                <option value="">Alle Kategorien</option>
+              </select>
+              <select id="qm-filter-diff">
+                <option value="">Alle Schwierigkeiten</option>
+                <option value="1">★ (1)</option>
+                <option value="2">★★ (2)</option>
+                <option value="3">★★★ (3)</option>
+                <option value="4">★★★★ (4)</option>
+                <option value="5">★★★★★ (5)</option>
+              </select>
+            </div>
+            <div class="qm-search-wrap">
+              <i class="ti ti-search"></i>
+              <input type="text" id="qm-search" placeholder="Fragen durchsuchen…">
+            </div>
+          </div>
+
+          <!-- Bulk-Leiste -->
+          <div class="qm-bulk" id="qm-bulk">
+            <strong id="qm-bulk-count">0</strong> ausgewählt
+            <input type="text" id="qm-bulk-cat" placeholder="Kategorie…" style="width:120px">
+            <button onclick="bulkSetCategory()">Setzen</button>
+            <select id="qm-bulk-diff">
+              <option value="">Schwierigkeit…</option>
+              <option value="1">★ (1)</option>
+              <option value="2">★★ (2)</option>
+              <option value="3">★★★ (3)</option>
+              <option value="4">★★★★ (4)</option>
+              <option value="5">★★★★★ (5)</option>
+            </select>
+            <button onclick="bulkSetDifficulty()">Setzen</button>
+            <button class="danger" onclick="bulkDelete()"><i class="ti ti-trash"></i> Löschen</button>
+            <button onclick="clearSelection()">Abwählen</button>
+          </div>
+
+          <table class="qm-table">
+            <thead>
+              <tr>
+                <th class="col-check"><input type="checkbox" onchange="toggleSelectAllVisible(this.checked)" title="Alle auf dieser Seite"></th>
+                <th class="sortable" data-col="type" onclick="sortByCol('type')">Typ<span class="sort-ind"></span></th>
+                <th class="sortable" data-col="text" onclick="sortByCol('text')">Fragetext<span class="sort-ind"></span></th>
+                <th class="sortable" data-col="category" onclick="sortByCol('category')">Kategorie<span class="sort-ind"></span></th>
+                <th class="sortable" data-col="difficulty" onclick="sortByCol('difficulty')">Schwierigkeit<span class="sort-ind"></span></th>
+                <th class="sortable" data-col="rate" onclick="sortByCol('rate')">Fehlerquote<span class="sort-ind"></span></th>
+              </tr>
+            </thead>
+            <tbody id="qm-tbody"></tbody>
+          </table>
+
+          <div class="qm-pagination">
+            <span id="qm-page-info">0 von 0</span>
+            <div class="pg-controls">
+              <button id="qm-prev" onclick="changePage(-1)"><i class="ti ti-chevron-left"></i></button>
+              <button id="qm-next" onclick="changePage(1)"><i class="ti ti-chevron-right"></i></button>
+              <select id="qm-page-size">
+                <option value="10">10 / Seite</option>
+                <option value="25">25 / Seite</option>
+                <option value="50">50 / Seite</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rechte Spalte: Editor -->
+        <div class="qm-editor-panel">
+          <div class="qm-editor-head">
+            <h3 id="qm-editor-title"><i class="ti ti-plus"></i> Neue Frage</h3>
+            <span class="edit-id" id="qm-editor-id"></span>
+          </div>
+          <div id="qm-editor-body"></div>
+        </div>
+      </div>
+
+      <!-- Statistik-Leiste -->
+      <div class="qm-statbar" id="qm-statbar"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<!-- TOAST-STACK -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<!-- DATALIST für Kategorie-Autocomplete im Editor -->
+<datalist id="cat-datalist"></datalist>
+
+<!-- IMPORT-MODAL -->
+<div class="gm-overlay" id="gm-import">
+  <div class="gm-modal">
+    <h3><i class="ti ti-upload"></i> Fragen importieren <button class="gm-close" onclick="closeImport()"><i class="ti ti-x"></i></button></h3>
+    <div class="gm-drop" id="import-drop">
+      <i class="ti ti-file-upload"></i>
+      Datei hierher ziehen oder klicken<br>
+      <span style="font-size:11px">JSON oder CSV</span>
+      <input type="file" id="import-file" accept=".json,.csv" style="display:none">
+    </div>
+    <div class="gm-preview" id="import-preview"></div>
+    <div style="font-size:12px;color:var(--text3);margin-top:8px" id="import-summary"></div>
+    <div class="gm-mode">
+      <label><input type="radio" name="import-mode" value="skip" checked> Duplikate überspringen</label>
+      <label><input type="radio" name="import-mode" value="overwrite"> Überschreiben</label>
+      <label><input type="radio" name="import-mode" value="merge"> Zusammenführen</label>
+    </div>
+    <div class="gm-btns">
+      <button class="qm-btn" onclick="closeImport()">Abbrechen</button>
+      <button class="qm-btn primary" id="import-confirm-btn" onclick="confirmImport()" disabled><i class="ti ti-check"></i> Importieren</button>
+    </div>
+  </div>
+</div>
+
+<!-- KATEGORIEN-MODAL -->
+<div class="gm-overlay" id="gm-cats">
+  <div class="gm-modal">
+    <h3><i class="ti ti-tags"></i> Kategorien verwalten <button class="gm-close" onclick="closeCategories()"><i class="ti ti-x"></i></button></h3>
+    <div class="cat-list" id="cat-list"></div>
+    <div class="cat-add-row">
+      <input type="text" id="cat-new" placeholder="Neue Kategorie…">
+      <button class="qm-btn primary" onclick="addCategory()"><i class="ti ti-plus"></i> Hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ──────────────────────────────
+const API_BASE    = '/api';   // same origin via nginx proxy
+
+// ─── DEFAULT QUESTIONS ───────────────────
+// Types: "mc" = multiple choice, "freetext" = free text input, "order" = drag & drop order
+const DEFAULT_QUESTIONS = [
+  {
+    type: 'mc',
+    text: 'Was ist die CIDR-Präfixlänge der Subnetzmaske:',
+    ip: '255.255.255.0',
+    correct: '/24',
+    wrong: ['/25', '/16', '/8'],
+    explain: '255.255.255.0 hat 24 aufeinanderfolgende Einsen in Binär → /24'
+  },
+  {
+    type: 'freetext',
+    text: 'Wie viele nutzbare Hosts gibt es im Netz (nur Zahl eingeben):',
+    ip: '192.168.1.0/25',
+    correct: '126',
+    wrong: [],
+    explain: '2^(32-25) – 2 = 2^7 – 2 = 128 – 2 = 126 Hosts'
+  },
+  {
+    type: 'mc',
+    text: 'Was ist die Broadcast-Adresse von:',
+    ip: '192.168.5.64/26',
+    correct: '192.168.5.127',
+    wrong: ['192.168.5.128', '192.168.5.63', '192.168.5.255'],
+    explain: 'Blockgröße=64, Netzadresse=.64, Broadcast=64+64–1=.127'
+  },
+  {
+    type: 'freetext',
+    text: 'Welche Subnetzmaske gehört zur Präfixlänge /26? (z. B. 255.255.255.x)',
+    ip: '',
+    correct: '255.255.255.192',
+    wrong: [],
+    explain: 'Blockgröße=2^6=64, Maske=256–64=192 → 255.255.255.192'
+  },
+  {
+    type: 'mc',
+    text: 'Zu welchem Subnetz gehört die IP:',
+    ip: '172.16.45.200/20',
+    correct: '172.16.32.0/20',
+    wrong: ['172.16.45.0/20', '172.16.48.0/20', '172.16.0.0/20'],
+    explain: 'Blockgröße=/20→2^12=4096. Im 3. Oktett: Vielfaches von 16 ≤ 45 ist 32 → 172.16.32.0'
+  },
+  {
+    type: 'freetext',
+    text: 'Wie viele Subnetze entstehen, wenn /24 in /27 aufgeteilt wird? (nur Zahl)',
+    ip: '',
+    correct: '8',
+    wrong: [],
+    explain: 'Zusätzliche Bits: 27–24=3 → 2^3=8 Subnetze'
+  },
+  {
+    type: 'order',
+    text: 'Bringe die Schritte zum Subnetting in die richtige Reihenfolge:',
+    ip: '',
+    correct: '',
+    wrong: [],
+    explain: 'Die korrekte Reihenfolge: Host-Bits → Blockgröße → nutzbare Hosts → Subnetzmaske berechnen.',
+    orderItems: [
+      'Host-Bits berechnen (32 – Präfix)',
+      'Blockgröße ermitteln (2^Host-Bits)',
+      'Nutzbare Hosts berechnen (Blockgröße – 2)',
+      'Subnetzmaske berechnen (256 – Blockgröße)'
+    ]
+  },
+  {
+    type: 'mc',
+    text: 'Was ist der nutzbare Hostbereich von:',
+    ip: '192.168.0.0/29',
+    correct: '192.168.0.1 – 192.168.0.6',
+    wrong: ['192.168.0.0 – 192.168.0.7', '192.168.0.1 – 192.168.0.7', '192.168.0.0 – 192.168.0.6'],
+    explain: 'Blockgröße=8, Netz=.0, Broadcast=.7 → Hosts: .1–.6'
+  },
+  {
+    type: 'freetext',
+    text: 'Was ist die Netzadresse von 10.10.10.130/25? (IP-Adresse eingeben)',
+    ip: '',
+    correct: '10.10.10.128',
+    wrong: [],
+    explain: 'Blockgröße=128. Vielfaches von 128 ≤ 130: 128 → Netzadresse ist 10.10.10.128'
+  },
+  {
+    type: 'mc',
+    text: 'Welcher private IPv4-Bereich gehört laut RFC 1918 zu Klasse B?',
+    ip: '',
+    correct: '172.16.0.0 – 172.31.255.255',
+    wrong: ['10.0.0.0 – 10.255.255.255', '192.168.0.0 – 192.168.255.255', '172.0.0.0 – 172.255.255.255'],
+    explain: 'RFC 1918 Klasse B: 172.16.0.0 bis 172.31.255.255 (/12)'
+  },
+  {
+    type: 'mc',
+    text: 'Welche Präfixlänge ist für ein Punkt-zu-Punkt-Netz (genau 2 Hosts) am besten geeignet?',
+    ip: '',
+    correct: '/30',
+    wrong: ['/29', '/31', '/28'],
+    explain: '/30 → 2^2–2=2 Hosts. /29 verschwendet Adressen, /31 hat keine Netz/Broadcast-Adresse (Sonderfall RFC 3021)'
+  }
+];
+
+// ─── STATE ───────────────────────────────
+let currentUser  = '';
+let questions    = [];
+let testResults  = [];   // local cache for admin (loaded from API)
+let errorsByQ    = {};
+
+let qIdx         = 0;
+let correctCount = 0;
+let wrongCount   = 0;
+let wrongDetails = [];
+let answered     = false;
+let chaptersRead = new Set();
+let editingQIdx  = -1;
+let testStartTime= null;
+
+let dragSrcIdx   = null;
+let orderItems   = [];
+
+// ─── STORAGE ─────────────────────────────
+function lsGet(k)    { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+
+// ─── LOGIN ────────────────────────────────
+async function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  if (name.length < 2) {
+    document.getElementById('login-name').style.borderColor = 'var(--red)';
+    document.getElementById('login-name').placeholder = 'Bitte mindestens 2 Zeichen eingeben';
+    return;
+  }
+  currentUser = name;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('nav-username').textContent = name;
+
+  // Fragen vom Server laden (mit Offline-Fallback)
+  questions = await loadQuestionsForTest();
+  errorsByQ = lsGet('sn_errors') || {};
+  updateProgress();
+}
+
+// Fragen für den Test: Server zuerst → lokaler Cache → eingebaute Defaults
+async function loadQuestionsForTest() {
+  try {
+    const resp = await fetch(`${API_BASE}/questions/public`);
+    if (resp.ok) {
+      const data = await resp.json();
+      if (Array.isArray(data) && data.length) {
+        lsSet('sn_questions', data);   // Cache für Offline-Betrieb
+        return data;
+      }
+    }
+  } catch (e) { /* offline → Fallback unten */ }
+  return lsGet('sn_questions') || JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+}
+
+document.getElementById('login-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ─── NAVIGATION ──────────────────────────
+function showPage(p, tabEl) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  if (p === 'admin') renderAdmin();
+}
+
+// ─── LEARN ───────────────────────────────
+function updateProgress() {
+  const n = chaptersRead.size;
+  const pct = Math.round((n / 5) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = n + ' / 5';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  for (let i = 0; i < 5; i++) {
+    const ch = document.getElementById('ch' + i);
+    if (ch) {
+      if (chaptersRead.has(i)) ch.classList.add('ch-read');
+      else ch.classList.remove('ch-read');
+    }
+  }
+}
+
+function toggleChapter(i) {
+  const ch = document.getElementById('ch' + i);
+  const wasOpen = ch.classList.contains('open');
+  document.querySelectorAll('.chapter').forEach(x => x.classList.remove('open'));
+  if (!wasOpen) { ch.classList.add('open'); chaptersRead.add(i); updateProgress(); }
+}
+
+function startTest() {
+  qIdx = 0; correctCount = 0; wrongCount = 0; wrongDetails = []; answered = false;
+  testStartTime = Date.now();
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('q-area').innerHTML = '';
+  updateCounters();
+  renderQuestion();
+  showPage('test', document.querySelectorAll('.nav-tab')[1]);
+}
+
+// ─── TEST ────────────────────────────────
+function updateCounters() {
+  document.getElementById('q-counter').textContent = (qIdx + 1) + ' / ' + questions.length;
+  document.getElementById('q-correct').textContent = correctCount;
+  document.getElementById('q-wrong').textContent   = wrongCount;
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderQuestion() {
+  if (qIdx >= questions.length) { showResult(); return; }
+  const q = questions[qIdx];
+  answered = false;
+
+  const pct = Math.round((qIdx / questions.length) * 100);
+  const typeName = { mc: 'Multiple Choice', freetext: 'Freitext', order: 'Reihenfolge' }[q.type || 'mc'] || 'Multiple Choice';
+  const typeCls  = { mc: 'mc', freetext: 'ft', order: 'ord' }[q.type || 'mc'] || 'mc';
+
+  let body = '';
+  if ((q.type || 'mc') === 'mc') {
+    const opts = shuffle([q.correct, ...q.wrong]);
+    body = `<div class="q-opts" id="opts">
+      ${opts.map(o => `<button class="q-opt" onclick="answerMC(this,'${esc(o)}','${esc(q.correct)}')">${esc(o)}</button>`).join('')}
+    </div>`;
+  } else if (q.type === 'freetext') {
+    body = `<div class="q-freetext-wrap">
+      <input class="q-freetext" id="ft-input" type="text" placeholder="Deine Antwort eingeben…" onkeydown="if(event.key==='Enter')answerFT()" autocomplete="off" />
+      <button class="btn-check" id="ft-btn" onclick="answerFT()">Prüfen</button>
+    </div>`;
+  } else if (q.type === 'order') {
+    orderItems = shuffle([...q.orderItems]);
+    body = `<div class="q-order-list" id="order-list">
+      ${orderItems.map((item, i) => `
+        <div class="order-item" draggable="true" data-idx="${i}"
+          ondragstart="dragStart(event,${i})"
+          ondragover="dragOver(event,${i})"
+          ondragleave="dragLeave(event,${i})"
+          ondrop="drop(event,${i})">
+          <i class="ti ti-grip-vertical drag-handle"></i>
+          <span>${esc(item)}</span>
+        </div>`).join('')}
+    </div>
+    <button class="btn-check-order" onclick="answerOrder('${esc(q.orderItems.join('|||'))}')">Reihenfolge prüfen</button>`;
+  }
+
+  document.getElementById('q-area').innerHTML = `
+    <div class="q-card">
+      <div class="q-prog-wrap"><div class="q-prog-bar" style="width:${pct}%"></div></div>
+      <div class="q-num">Frage ${qIdx + 1} von ${questions.length}</div>
+      <span class="q-type-badge ${typeCls}">${typeName}</span>
+      <div class="q-text">${esc(q.text)}</div>
+      ${q.ip ? `<div class="q-ip">${esc(q.ip)}</div>` : ''}
+      ${body}
+      <div class="q-feedback" id="fb"></div>
+      <button class="q-next" id="nxt" onclick="nextQ()">
+        <i class="ti ti-arrow-right"></i> Nächste Frage
+      </button>
+    </div>`;
+
+  if (q.type === 'freetext') {
+    setTimeout(() => { const el = document.getElementById('ft-input'); if (el) el.focus(); }, 50);
+  }
+}
+
+// Multiple choice answer
+function answerMC(btn, chosen, correct) {
+  if (answered) return;
+  answered = true;
+  const fb  = document.getElementById('fb');
+  const q   = questions[qIdx];
+  document.querySelectorAll('.q-opt').forEach(b => b.classList.add('disabled'));
+
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    correctCount++;
+    fb.className = 'q-feedback ok show';
+    fb.innerHTML = '<i class="ti ti-check"></i> Richtig! Gut gemacht.';
+  } else {
+    btn.classList.add('wrong');
+    wrongCount++;
+    wrongDetails.push({ q: q.text + (q.ip ? ' (' + q.ip + ')' : ''), your: chosen, correct, explain: q.explain });
+    const key = String(qIdx);
+    errorsByQ[key] = (errorsByQ[key] || 0) + 1;
+    lsSet('sn_errors', errorsByQ);
+    document.querySelectorAll('.q-opt').forEach(b => {
+      if (b.textContent.trim() === correct) b.classList.add('correct');
+    });
+    fb.className = 'q-feedback bad show';
+    fb.innerHTML = `<strong><i class="ti ti-x"></i> Falsch.</strong> ${esc(q.explain || '')}`;
+  }
+  updateCounters();
+  document.getElementById('nxt').classList.add('show');
+}
+
+// Free text answer
+function answerFT() {
+  if (answered) return;
+  const input   = document.getElementById('ft-input');
+  const btn     = document.getElementById('ft-btn');
+  const fb      = document.getElementById('fb');
+  const q       = questions[qIdx];
+  const userVal = input.value.trim();
+  if (!userVal) return;
+
+  answered = true;
+  btn.disabled = true;
+  input.readOnly = true;
+
+  // Mehrere akzeptierte Antworten mit | getrennt; caseSensitive optional
+  const cs       = q.caseSensitive === true;
+  const norm     = s => cs ? s.trim() : s.trim().toLowerCase();
+  const accepted = q.correct.split('|').map(norm);
+  const isCorrect = accepted.includes(norm(userVal));
+
+  if (isCorrect) {
+    input.classList.add('correct');
+    correctCount++;
+    fb.className = 'q-feedback ok show';
+    fb.innerHTML = `<i class="ti ti-check"></i> Richtig! <strong>${esc(userVal)}</strong> ist korrekt.`;
+  } else {
+    input.classList.add('wrong');
+    wrongCount++;
+    wrongDetails.push({ q: q.text + (q.ip ? ' (' + q.ip + ')' : ''), your: userVal, correct: q.correct, explain: q.explain });
+    const key = String(qIdx);
+    errorsByQ[key] = (errorsByQ[key] || 0) + 1;
+    lsSet('sn_errors', errorsByQ);
+    fb.className = 'q-feedback bad show';
+    fb.innerHTML = `<strong><i class="ti ti-x"></i> Falsch.</strong> Richtig wäre: <strong>${esc(q.correct)}</strong>. ${esc(q.explain || '')}`;
+  }
+  updateCounters();
+  document.getElementById('nxt').classList.add('show');
+}
+
+// Drag & Drop order
+function dragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function dragOver(e, idx) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.order-item').forEach(el => el.classList.remove('over'));
+  const el = document.querySelector(`.order-item[data-idx="${idx}"]`);
+  if (el) el.classList.add('over');
+}
+function dragLeave(e, idx) {
+  const el = document.querySelector(`.order-item[data-idx="${idx}"]`);
+  if (el) el.classList.remove('over');
+}
+function drop(e, targetIdx) {
+  e.preventDefault();
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) { dragSrcIdx = null; return; }
+  // Swap in orderItems array
+  [orderItems[dragSrcIdx], orderItems[targetIdx]] = [orderItems[targetIdx], orderItems[dragSrcIdx]];
+  dragSrcIdx = null;
+  // Re-render the list
+  const list = document.getElementById('order-list');
+  list.innerHTML = orderItems.map((item, i) => `
+    <div class="order-item" draggable="true" data-idx="${i}"
+      ondragstart="dragStart(event,${i})"
+      ondragover="dragOver(event,${i})"
+      ondragleave="dragLeave(event,${i})"
+      ondrop="drop(event,${i})">
+      <i class="ti ti-grip-vertical drag-handle"></i>
+      <span>${esc(item)}</span>
+    </div>`).join('');
+}
+
+function answerOrder(correctStr) {
+  if (answered) return;
+  answered = true;
+  const correct = correctStr.split('|||');
+  const fb = document.getElementById('fb');
+  const q  = questions[qIdx];
+  let allCorrect = true;
+
+  document.querySelectorAll('.order-item').forEach((el, i) => {
+    el.draggable = false;
+    if (orderItems[i] === correct[i]) { el.classList.add('correct-pos'); }
+    else { el.classList.add('wrong-pos'); allCorrect = false; }
+  });
+  document.querySelector('.btn-check-order').disabled = true;
+
+  if (allCorrect) {
+    correctCount++;
+    fb.className = 'q-feedback ok show';
+    fb.innerHTML = '<i class="ti ti-check"></i> Perfekt! Reihenfolge stimmt.';
+  } else {
+    wrongCount++;
+    wrongDetails.push({ q: q.text, your: orderItems.join(' → '), correct: correct.join(' → '), explain: q.explain });
+    const key = String(qIdx);
+    errorsByQ[key] = (errorsByQ[key] || 0) + 1;
+    lsSet('sn_errors', errorsByQ);
+    fb.className = 'q-feedback bad show';
+    fb.innerHTML = `<strong><i class="ti ti-x"></i> Nicht ganz.</strong> ${esc(q.explain || '')}`;
+  }
+  updateCounters();
+  document.getElementById('nxt').classList.add('show');
+}
+
+function nextQ() { qIdx++; updateCounters(); renderQuestion(); }
+
+// ─── RESULT ──────────────────────────────
+async function showResult() {
+  document.getElementById('q-area').innerHTML = '';
+  const ra   = document.getElementById('result-area');
+  ra.style.display = 'block';
+  const pct  = Math.round((correctCount / questions.length) * 100);
+  const pass = pct >= 60;
+  const now  = new Date().toLocaleString('de-DE');
+  const durationSec = testStartTime ? Math.round((Date.now() - testStartTime) / 1000) : null;
+  const durationStr = durationSec ? `${Math.floor(durationSec/60)}:${String(durationSec%60).padStart(2,'0')} min` : '–';
+
+  // Detailed answers for admin
+  const answersLog = wrongDetails.map(d => ({ question: d.q, given: d.your, correct: d.correct }));
+
+  const errHtml = wrongDetails.length > 0
+    ? `<div class="result-errors">
+        <h3><i class="ti ti-alert-circle"></i> Falsch beantwortet (${wrongDetails.length}):</h3>
+        ${wrongDetails.map(e => `
+          <div class="err-item">
+            <div class="err-q">${esc(e.q)}</div>
+            <div class="err-ans">Deine Antwort: ${esc(e.your)}</div>
+            <div class="err-ok">Richtige Antwort: ${esc(e.correct)}</div>
+          </div>`).join('')}
+       </div>` : '';
+
+  ra.innerHTML = `
+    <div class="result-card">
+      <div style="font-size:14px;color:var(--text3);margin-bottom:0.25rem">Ergebnis für <strong style="color:var(--text)">${esc(currentUser)}</strong></div>
+      <div class="result-pct ${pass ? 'pass' : 'fail'}">${pct}%</div>
+      <div class="result-badge ${pass ? 'pass' : 'fail'}">${pass ? '✓ Bestanden' : '✗ Nicht bestanden'}</div>
+      <div class="result-sub">${correctCount} von ${questions.length} Fragen richtig &bull; Dauer: ${durationStr} &bull; ${pass ? 'Mindestpunktzahl erreicht' : 'Mindestpunktzahl: 60%'}</div>
+      ${errHtml}
+      <div class="result-btns">
+        <button onclick="startTest()"><i class="ti ti-refresh"></i> Wiederholen</button>
+        <button onclick="showPage('learn', document.querySelectorAll('.nav-tab')[0])"><i class="ti ti-book"></i> Lernen</button>
+      </div>
+      <div class="save-status" id="save-status">⏳ Ergebnis wird gespeichert…</div>
+    </div>`;
+
+  // Save to server
+  try {
+    const resp = await fetch(`${API_BASE}/results`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: currentUser,
+        score: pct,
+        correct: correctCount,
+        total: questions.length,
+        duration: durationStr,
+        wrong: wrongDetails,
+        answers: answersLog
+      })
+    });
+    if (resp.ok) {
+      document.getElementById('save-status').textContent = '✓ Ergebnis gespeichert';
+      document.getElementById('save-status').className = 'save-status ok';
+    } else {
+      throw new Error('Server error');
+    }
+  } catch(err) {
+    document.getElementById('save-status').textContent = '⚠ Ergebnis konnte nicht gespeichert werden (Server nicht erreichbar)';
+    document.getElementById('save-status').className = 'save-status err';
+  }
+}
+
+// ─── ADMIN-BEREICH ───────────────────────
+// Die gesamte Admin-Logik (Login, Ergebnisse, Frageverwaltung, Import/Export,
+// Kategorien, Toasts) liegt ausgelagert in admin-editor.js und wird unten
+// nach diesem Script eingebunden. renderAdmin() wird von showPage('admin') aufgerufen.
+</script>
+<script src="admin-editor.js"></script>
+</body>
+</html>

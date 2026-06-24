@@ -1,0 +1,40 @@
+services:
+
+  # ── Frontend (nginx) ──────────────────────────
+  subnetting-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: subnetting-web
+    ports:
+      - "8080:80"          # Erreichbar unter http://dein-server:8080
+    depends_on:
+      - api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── API / Backend (Node.js) ───────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: subnetting-api
+    environment:
+      - PORT=3001
+      - ADMIN_PASS=admin123      # ← Admin-Passwort hier ändern! (nur hier, NICHT im HTML)
+      - SESSION_SECRET=bitte-aendern   # ← Signiert die Login-Tokens; eigenen, langen Zufallswert setzen
+    volumes:
+      - results-data:/app/data   # results.json + questions.json bleiben erhalten
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/results", "--header=x-admin-pass:admin123"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  results-data:                  # Docker-Volume → Daten überleben Container-Neustart

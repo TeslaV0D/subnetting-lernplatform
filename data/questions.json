@@ -1,0 +1,200 @@
+[
+  {
+    "id": "q-8f6496d1-a98b-4779-8d40-258d346aee11",
+    "type": "mc",
+    "text": "Was ist die CIDR-Präfixlänge der Subnetzmaske:",
+    "category": "CIDR",
+    "difficulty": 1,
+    "ip": "255.255.255.0",
+    "correct": "/24",
+    "wrong": [
+      "/25",
+      "/16",
+      "/8"
+    ],
+    "orderItems": [],
+    "explain": "255.255.255.0 hat 24 aufeinanderfolgende Einsen in Binär → /24",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-d0c0c2ea-80bb-4a5c-8693-4eb7dcf40b5c",
+    "type": "freetext",
+    "text": "Wie viele nutzbare Hosts gibt es im Netz (nur Zahl eingeben):",
+    "category": "Hosts",
+    "difficulty": 2,
+    "ip": "192.168.1.0/25",
+    "correct": "126",
+    "wrong": [],
+    "orderItems": [],
+    "explain": "2^(32-25) – 2 = 2^7 – 2 = 128 – 2 = 126 Hosts",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184,
+    "caseSensitive": false
+  },
+  {
+    "id": "q-2136f81c-5ff1-410f-b2ac-9b134d982ce4",
+    "type": "mc",
+    "text": "Was ist die Broadcast-Adresse von:",
+    "category": "Broadcast",
+    "difficulty": 2,
+    "ip": "192.168.5.64/26",
+    "correct": "192.168.5.127",
+    "wrong": [
+      "192.168.5.128",
+      "192.168.5.63",
+      "192.168.5.255"
+    ],
+    "orderItems": [],
+    "explain": "Blockgröße=64, Netzadresse=.64, Broadcast=64+64–1=.127",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-6ed2cd30-7df0-470f-8188-0eb5553feebc",
+    "type": "freetext",
+    "text": "Welche Subnetzmaske gehört zur Präfixlänge /26? (z. B. 255.255.255.x)",
+    "category": "Subnetzmaske",
+    "difficulty": 2,
+    "ip": "",
+    "correct": "255.255.255.192",
+    "wrong": [],
+    "orderItems": [],
+    "explain": "Blockgröße=2^6=64, Maske=256–64=192 → 255.255.255.192",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184,
+    "caseSensitive": false
+  },
+  {
+    "id": "q-dd0ce355-6c29-4271-b2a9-136f2119bc84",
+    "type": "mc",
+    "text": "Zu welchem Subnetz gehört die IP:",
+    "category": "Subnetting",
+    "difficulty": 3,
+    "ip": "172.16.45.200/20",
+    "correct": "172.16.32.0/20",
+    "wrong": [
+      "172.16.45.0/20",
+      "172.16.48.0/20",
+      "172.16.0.0/20"
+    ],
+    "orderItems": [],
+    "explain": "Blockgröße=/20→2^12=4096. Im 3. Oktett: Vielfaches von 16 ≤ 45 ist 32 → 172.16.32.0",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-a72c2f5c-9d6b-4bbf-ba42-34dac1b10187",
+    "type": "freetext",
+    "text": "Wie viele Subnetze entstehen, wenn /24 in /27 aufgeteilt wird? (nur Zahl)",
+    "category": "Subnetting",
+    "difficulty": 2,
+    "ip": "",
+    "correct": "8",
+    "wrong": [],
+    "orderItems": [],
+    "explain": "Zusätzliche Bits: 27–24=3 → 2^3=8 Subnetze",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184,
+    "caseSensitive": false
+  },
+  {
+    "id": "q-7780088c-1869-485c-b8ed-6c981f9aeef1",
+    "type": "order",
+    "text": "Bringe die Schritte zum Subnetting in die richtige Reihenfolge:",
+    "category": "Subnetting",
+    "difficulty": 3,
+    "ip": "",
+    "correct": "",
+    "wrong": [],
+    "orderItems": [
+      "Host-Bits berechnen (32 – Präfix)",
+      "Blockgröße ermitteln (2^Host-Bits)",
+      "Nutzbare Hosts berechnen (Blockgröße – 2)",
+      "Subnetzmaske berechnen (256 – Blockgröße)"
+    ],
+    "explain": "Die korrekte Reihenfolge: Host-Bits → Blockgröße → nutzbare Hosts → Subnetzmaske berechnen.",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-6d380a4b-f0f0-4c73-acbd-00fdf09e2436",
+    "type": "mc",
+    "text": "Was ist der nutzbare Hostbereich von:",
+    "category": "Hosts",
+    "difficulty": 3,
+    "ip": "192.168.0.0/29",
+    "correct": "192.168.0.1 – 192.168.0.6",
+    "wrong": [
+      "192.168.0.0 – 192.168.0.7",
+      "192.168.0.1 – 192.168.0.7",
+      "192.168.0.0 – 192.168.0.6"
+    ],
+    "orderItems": [],
+    "explain": "Blockgröße=8, Netz=.0, Broadcast=.7 → Hosts: .1–.6",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-be7ac45a-bc8a-44f0-b6b0-b6e8efae6193",
+    "type": "freetext",
+    "text": "Was ist die Netzadresse von 10.10.10.130/25? (IP-Adresse eingeben)",
+    "category": "Netzadresse",
+    "difficulty": 3,
+    "ip": "",
+    "correct": "10.10.10.128",
+    "wrong": [],
+    "orderItems": [],
+    "explain": "Blockgröße=128. Vielfaches von 128 ≤ 130: 128 → Netzadresse ist 10.10.10.128",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184,
+    "caseSensitive": false
+  },
+  {
+    "id": "q-926e0564-17de-4279-b5c8-a1c00ecedeef",
+    "type": "mc",
+    "text": "Welcher private IPv4-Bereich gehört laut RFC 1918 zu Klasse B?",
+    "category": "RFC 1918",
+    "difficulty": 2,
+    "ip": "",
+    "correct": "172.16.0.0 – 172.31.255.255",
+    "wrong": [
+      "10.0.0.0 – 10.255.255.255",
+      "192.168.0.0 – 192.168.255.255",
+      "172.0.0.0 – 172.255.255.255"
+    ],
+    "orderItems": [],
+    "explain": "RFC 1918 Klasse B: 172.16.0.0 bis 172.31.255.255 (/12)",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  },
+  {
+    "id": "q-5effd725-9b73-4d98-965e-a89764c2bc33",
+    "type": "mc",
+    "text": "Welche Präfixlänge ist für ein Punkt-zu-Punkt-Netz (genau 2 Hosts) am besten geeignet?",
+    "category": "CIDR",
+    "difficulty": 3,
+    "ip": "",
+    "correct": "/30",
+    "wrong": [
+      "/29",
+      "/31",
+      "/28"
+    ],
+    "orderItems": [],
+    "explain": "/30 → 2^2–2=2 Hosts. /29 verschwendet Adressen, /31 hat keine Netz/Broadcast-Adresse (Sonderfall RFC 3021)",
+    "author": "admin",
+    "createdAt": 1782205966184,
+    "updatedAt": 1782205966184
+  }
+]
