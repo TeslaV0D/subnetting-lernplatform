@@ -343,6 +343,7 @@
     }
   </style>
   <link rel="stylesheet" href="admin-editor.css">
+  <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
 
@@ -369,23 +370,28 @@
 <!-- NAVIGATION -->
 <nav class="nav">
   <span class="nav-brand"><span>192.168</span>.LERN.PLATZ</span>
-  <div class="nav-user">
-    <i class="ti ti-user-circle"></i>
-    <span>Angemeldet als <strong id="nav-username"></strong></span>
-  </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('learn', this)">
-      <i class="ti ti-book"></i> <span>Lernen</span>
-    </button>
-    <button class="nav-tab" onclick="showPage('test', this)">
-      <i class="ti ti-clipboard-check"></i> <span>Test</span>
-    </button>
-    <button class="nav-tab" onclick="showPage('ip-trainer', this)">
-      <i class="ti ti-network"></i> <span>IP-Trainer</span>
-    </button>
-    <button class="nav-tab" onclick="showPage('admin', this)">
-      <i class="ti ti-settings"></i> <span>Admin</span>
-    </button>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu" onclick="toggleNav()">
+    <i class="ti ti-menu-2"></i><i class="ti ti-x"></i>
+  </button>
+  <div class="nav-menu" id="nav-menu">
+    <div class="nav-user">
+      <i class="ti ti-user-circle"></i>
+      <span>Angemeldet als <strong id="nav-username"></strong></span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('learn', this)">
+        <i class="ti ti-book"></i> <span>Lernen</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('test', this)">
+        <i class="ti ti-clipboard-check"></i> <span>Test</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('ip-trainer', this)">
+        <i class="ti ti-network"></i> <span>IP-Trainer</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('admin', this)">
+        <i class="ti ti-settings"></i> <span>Admin</span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -663,6 +669,7 @@ Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="
             <button class="btn-danger" onclick="clearResults()"><i class="ti ti-trash"></i> Alle löschen</button>
           </div>
         </div>
+        <div class="table-scroll">
         <table class="admin-table">
           <thead>
             <tr>
@@ -677,6 +684,7 @@ Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="
           </thead>
           <tbody id="results-tbody"></tbody>
         </table>
+        </div>
       </div>
 
       <!-- Error heatmap -->
@@ -745,6 +753,7 @@ Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="
             <button onclick="clearSelection()">Abwählen</button>
           </div>
 
+          <div class="table-scroll">
           <table class="qm-table">
             <thead>
               <tr>
@@ -758,6 +767,7 @@ Host-Range:    192.168.10.<span class="hl">1</span> – 192.168.10.<span class="
             </thead>
             <tbody id="qm-tbody"></tbody>
           </table>
+          </div>
 
           <div class="qm-pagination">
             <span id="qm-page-info">0 von 0</span>
@@ -997,6 +1007,25 @@ document.getElementById('login-name').addEventListener('keydown', e => {
 });
 
 // ─── NAVIGATION ──────────────────────────
+// ─── MOBILE-NAVIGATION ───────────────────
+function toggleNav() {
+  const nav = document.querySelector('.nav');
+  const toggle = document.getElementById('nav-toggle');
+  const open = nav.classList.toggle('open');
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+  }
+}
+function closeNav() {
+  const nav = document.querySelector('.nav');
+  if (nav && nav.classList.contains('open')) {
+    nav.classList.remove('open');
+    const toggle = document.getElementById('nav-toggle');
+    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Menü öffnen'); }
+  }
+}
+
 function showPage(p, tabEl) {
   document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
@@ -1004,6 +1033,8 @@ function showPage(p, tabEl) {
   if (tabEl) tabEl.classList.add('active');
   if (p === 'admin') renderAdmin();
   if (p === 'ip-trainer' && !ipTrainerInitialized) { initIPTrainer(); ipTrainerInitialized = true; }
+  closeNav();           // Dropdown nach Seitenwechsel schließen (Mobile)
+  window.scrollTo(0, 0);
 }
 
 // ─── LEARN ───────────────────────────────
