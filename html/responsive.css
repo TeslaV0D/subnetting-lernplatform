@@ -1,0 +1,175 @@
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE / MOBILE-FIRST OVERRIDES
+   Ergänzt index.html (inline <style>) und admin-editor.css.
+   Wird als LETZTES Stylesheet eingebunden → gewinnt bei
+   gleicher Spezifität.
+
+   Breakpoints (an Tailwind angelehnt):
+     sm  ≥ 640px
+     md  ≥ 768px   (Grenze Mobile ↔ Desktop-Navigation)
+     lg  ≥ 1024px
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Grundlagen: kein horizontales Scrollen, Tap-Verhalten ── */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { overflow-x: hidden; }
+* { -webkit-tap-highlight-color: rgba(56, 139, 253, 0.25); }
+
+/* Sanftes Tap-Feedback für alle Buttons auf Touch-Geräten */
+button { touch-action: manipulation; }
+
+/* Scrollbare Tabellen-Container (auf Mobile horizontal scrollbar) */
+.table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ── Mobile-Navigation: Hamburger-Button (default ausgeblendet) ── */
+.nav-toggle { display: none; }
+/* Wrapper um nav-user + nav-tabs. Auf Desktop "unsichtbar" im Layout,
+   damit die bestehende Desktop-Anordnung 1:1 erhalten bleibt. */
+.nav-menu { display: contents; }
+
+/* ════════════════════════════════════════════════════════════
+   ≤ 768px  →  MOBILE & TABLET-HOCHFORMAT
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* —— Navigation: Hamburger + Dropdown-Panel —— */
+  .nav { gap: 0.5rem; padding: 0 1rem; position: relative; }
+  .nav-brand { font-size: 13px; }
+
+  .nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: auto;
+    width: 44px; height: 44px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    font-size: 22px; cursor: pointer; transition: all 0.15s;
+  }
+  .nav-toggle:hover, .nav-toggle:focus-visible { border-color: var(--blue); color: var(--blue-text); }
+  .nav-toggle .ti-x { display: none; }
+  .nav.open .nav-toggle .ti-menu-2 { display: none; }
+  .nav.open .nav-toggle .ti-x { display: inline; }
+
+  /* Dropdown-Panel klappt unter die Navbar */
+  .nav-menu {
+    display: none;
+    position: absolute; top: 56px; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0.5rem;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 0.75rem; z-index: 99;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+  .nav.open .nav-menu { display: flex; }
+
+  .nav-user {
+    margin-left: 0; order: 2;
+    font-size: 13px; padding: 0.25rem 0.25rem 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-tabs { order: 1; flex-direction: column; gap: 4px; width: 100%; }
+  .nav-tab {
+    width: 100%; justify-content: flex-start;
+    min-height: 44px; padding: 10px 14px; font-size: 15px;
+  }
+  /* Labels im Dropdown immer anzeigen (überschreibt das 600px-Verstecken) */
+  .nav-tab span { display: inline; }
+
+  /* —— Seiten-Padding & Lesbarkeit —— */
+  .page { padding: 1rem; max-width: 100%; line-height: 1.7; }
+  .learn-hero { padding: 1.25rem; }
+  .learn-hero h1 { font-size: 19px; }
+
+  /* —— Touch-freundliche Buttons (mind. 44px Höhe) —— */
+  .btn-start, .btn-login, .start-btn,
+  .btn-check, .btn-check-order,
+  .ip-btn-primary, .ip-btn-ghost,
+  .qe-btn, .qm-btn,
+  .btn-logout, .btn-export,
+  .result-btns button, .modal-btns button, .gm-btns button {
+    min-height: 44px;
+  }
+  /* Kleinere Icon-/Check-Buttons: ausreichende Trefferfläche */
+  .ip-btn-check, .row-act, .btn-icon, .detail-btn, .qm-pagination button {
+    min-height: 40px; min-width: 40px;
+  }
+
+  /* —— LERN-Kapitel —— */
+  .chapter-header { padding: 0.875rem 1rem; }
+  .code-block { font-size: 11.5px; padding: 0.875rem; }
+
+  /* —— TEST-Seite —— */
+  .test-meta { gap: 8px; }
+  .t-stat { padding: 0.625rem; }
+  .t-stat .val { font-size: 18px; }
+  .q-card { padding: 1.125rem; }
+  .q-ip { font-size: 16px; }
+  /* Freitext-Eingabe gestaffelt: Feld voll breit, Button darunter */
+  .q-freetext-wrap { flex-direction: column; align-items: stretch; }
+  .q-freetext-wrap .btn-check { width: 100%; }
+  .result-pct { font-size: 44px; }
+
+  /* —— IP-TRAINER —— */
+  .ip-display { font-size: 17px; padding: 0.625rem 0.875rem; letter-spacing: 0.5px; }
+  .ip-q-row { grid-template-columns: 1fr; gap: 4px; }
+  .ip-input-row { flex-wrap: wrap; }
+  .ip-field { min-height: 44px; }
+  .badge-btn { min-height: 40px; padding: 8px 16px; }
+  .binary-row { grid-template-columns: 110px 1fr; }
+  .binary-row .value.bin { grid-column: 1 / -1; overflow-x: auto; }
+
+  /* —— ADMIN —— */
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .admin-sec-head { flex-wrap: wrap; gap: 8px; }
+  /* Tabellen horizontal scrollbar statt überlaufend */
+  .admin-table, .qm-table { min-width: 560px; }
+  .qm-q-text { max-width: none; white-space: normal; }
+
+  /* Editor unter der Liste nicht „kleben“ */
+  .qm-editor-panel { position: static; }
+
+  /* —— Modals: volle Breite, gut erreichbare Buttons —— */
+  .modal, .gm-modal { max-width: 100%; padding: 1.25rem; }
+  .modal-btns, .gm-btns { flex-wrap: wrap; }
+  .modal-btns button, .gm-btns button { flex: 1; min-width: 120px; }
+
+  /* Toasts spannen die Breite und überlappen nichts */
+  .toast-stack { left: 0.75rem; right: 0.75rem; bottom: 0.75rem; max-width: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ≤ 480px  →  KLEINE SMARTPHONES
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .page { padding: 0.75rem; }
+  .test-meta { grid-template-columns: 1fr 1fr; }
+  .test-meta .t-stat:first-child { grid-column: 1 / -1; }
+  .admin-stats { grid-template-columns: 1fr; }
+  .qm-statbar { grid-template-columns: repeat(2, 1fr); }
+  .qm-filter-row { flex-direction: column; }
+  .result-pct { font-size: 38px; }
+  .ip-display { font-size: 15px; }
+  .ip-actions { flex-direction: column; align-items: stretch; }
+  .ip-actions .ip-btn-primary, .ip-actions .ip-btn-ghost { width: 100%; justify-content: center; }
+  .admin-topbar { flex-direction: column; align-items: stretch; }
+  .admin-switch { width: 100%; }
+  .admin-switch button { flex: 1; justify-content: center; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ≥ 769px  →  TABLET-QUER & DESKTOP
+   Stellt sicher, dass die Desktop-Anordnung (Sidebar/Editor neben
+   Content, horizontale Navigation) erhalten bleibt.
+   ════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .nav-toggle { display: none; }
+  .nav-menu { display: contents; }
+}
+
+/* ── Geräte ohne Hover (echte Touchscreens): Tap-Feedback ── */
+@media (hover: none) {
+  .nav-tab:active, .qm-btn:active, .btn-check:active,
+  .ip-btn-primary:active, .start-btn:active,
+  .result-btns button:active, .qe-btn:active {
+    transform: scale(0.97);
+  }
+}
